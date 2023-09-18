@@ -29,3 +29,19 @@ pnpm-debug.log*
 
 **/src/auto-imports.d.ts
 **/src/components.d.ts
+
+
+server/log
+
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+*.test
+
+*.out
+
+go.work

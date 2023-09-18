@@ -1,7 +1,6 @@
 <template>
   <div class="node-conatiner">
-    <h2 class="nc_title font18">网站管理</h2>
-    <Alert type="info" message="Table + action slot 联动表单基本用法" />
+    <h2 class="nc_title font18">设备列表</h2>
     <Table
       ref="ELRef"
       :url="fetchApi.page_one_list"
@@ -38,7 +37,9 @@
   import { validatePhone } from '/@/utils/validate';
   import type { FormInstance } from 'ant-design-vue';
   import type { Rule } from 'ant-design-vue/es/form';
+  import { ref, computed, reactive } from 'vue';
 
+  const router = useRouter();
   const mockReq = (params?: any): Promise<Boolean> =>
     new Promise((resolve) => setTimeout(() => resolve(params ? !!params : true), 500));
 
@@ -79,6 +80,12 @@
   });
 
   const tableActions = reactive([
+    {
+      label: '通道',
+      onClick: async () => {
+        router.push('/');
+      },
+    },
     {
       label: '编辑',
       // auth: AuthEnum.user_update,

@@ -1,0 +1,14 @@
+server:
+  mode: dev # 系统影响环境，dev prod test
+
+
+# 日志配置
+zap:
+  level:        info
+  directory:    log
+  maxSize:      "500"
+  maxBackups:   "3"
+  maxAge:       "28"
+  compress:     true
+  loginConsole: true
+  format:       json

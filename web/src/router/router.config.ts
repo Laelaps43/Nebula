@@ -21,9 +21,9 @@ export const accessRoutes: RouteRecordRaw[] = [
         },
       },
       {
-        path: '/app/website',
+        path: '/app/devices',
         name: 'website',
-        component: () => import('/@/views/website/index.vue'),
+        component: () => import('/@/views/devices/index.vue'),
         meta: {
           title: '设备列表',
           keepAlive: true,
