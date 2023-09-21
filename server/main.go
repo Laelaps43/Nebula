@@ -10,5 +10,5 @@ func main()  {
 	global.VP = pkg.Viper()	
 	global.Logger = pkg.Zap()
 	zap.ReplaceGlobals(global.Logger)
-	global.Logger.Warn("abcdefa")
+	global.DB = pkg.Gorm()
 }

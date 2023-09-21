@@ -1,5 +1,6 @@
 server:
   mode: dev # 系统影响环境，dev prod test
+  db_type: mysql  # 使用mysql或者是使用sqlite, pgsql
 
 
 # 日志配置
@@ -12,3 +13,40 @@ zap:
   compress:     true
   loginConsole: true
   format:       json
+
+# mysql配置
+mysql:
+  port: 3306
+  path: http://127.0.0.1
+  username: root
+  password: 123456
+  db-name:  nebula
+  max-idle-conns: "10"
+  max-open-conns: "50"
+  log-model: info
+  log-zap:  true
+
+# postgresql配置
+pgsql:
+  port: 3306
+  path: http://127.0.0.1
+  username: root
+  password: 123456
+  db-name:  nebula
+  max-idle-conns: "10"
+  max-open-conns: "50"
+  log-model: info
+  log-zap:  true
+
+# sqlite配置
+sqlite:
+  port: 3306
+  path: http://127.0.0.1
+  username: root
+  password: 123456
+  db-name:  nebula
+  max-idle-conns: "10"
+  max-open-conns: "50"
+  log-model: info
+  log-zap:  true
+ 
