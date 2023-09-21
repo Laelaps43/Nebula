@@ -11,4 +11,8 @@ func main()  {
 	global.Logger = pkg.Zap()
 	zap.ReplaceGlobals(global.Logger)
 	global.DB = pkg.Gorm()
+	if global.DB != nil{
+		// TODO 初始化表
+	}
+	pkg.RunServer()
 }

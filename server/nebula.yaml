@@ -1,6 +1,9 @@
 server:
   mode: dev # 系统影响环境，dev prod test
   db_type: mysql  # 使用mysql或者是使用sqlite, pgsql
+  port: 8080  # web运行的端口号
+  route-prefix: ""  # 路由前缀
+  
 
 
 # 日志配置
