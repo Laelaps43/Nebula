@@ -1,33 +1,39 @@
 server:
   mode: dev # 系统影响环境，dev prod test
-  db_type: mysql  # 使用mysql或者是使用sqlite, pgsql
   port: 8080  # web运行的端口号
-  route-prefix: ""  # 路由前缀
-  
+  route-prefix: "abc"  # 路由前缀
+  login-max-num:  "6" # 最大登录次数
+  login-timeout:  "1000"
+  cache-type: redis # 指定缓存
+  db-type: mysql
 
+jwt:
+  signing-key: laelaps
+  jwt-expire: 7d # 单位为天
+  issuer:  laelaps  # JWT发行人
 
 # 日志配置
 zap:
   level:        info
   directory:    log
-  maxSize:      "500"
-  maxBackups:   "3"
-  maxAge:       "28"
+  max-size:      "500"
+  max-backups:   "3"
+  max-age:       "28"
   compress:     true
-  loginConsole: true
+  login-console: true
   format:       json
 
 # mysql配置
 mysql:
-  port: 3306
-  path: http://127.0.0.1
-  username: root
-  password: 123456
-  db-name:  nebula
-  max-idle-conns: "10"
-  max-open-conns: "50"
-  log-model: info
-  log-zap:  true
+  port: "3306"
+  path: "127.0.0.1"
+  username: "root"
+  password: "123456"
+  db-name:  "nebula"
+  max-idle-cons: "10"
+  max-open-cons: "50"
+  log-model: "info"
+  log-zap:  "true"
 
 # postgresql配置
 pgsql:
@@ -43,13 +49,19 @@ pgsql:
 
 # sqlite配置
 sqlite:
-  port: 3306
-  path: http://127.0.0.1
-  username: root
+  port: "3306"
+  path: "http://127.0.0.1"
+  username: "root"
   password: 123456
   db-name:  nebula
   max-idle-conns: "10"
   max-open-conns: "50"
   log-model: info
   log-zap:  true
- 
+
+
+# Redis 配置
+redis:
+  db: 10
+  addr: 127.0.0.1:6379
+  password: ""

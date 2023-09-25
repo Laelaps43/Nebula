@@ -1,4 +1,5 @@
 package config
+
 // zap配置信息
 
 import (
@@ -8,14 +9,14 @@ import (
 )
 
 type ZAP struct {
-	Directory    string `yaml:"directory"`
-	Level        string `yaml:"level"`
-	MaxSize      int    `yaml:"maxSize"`
-	MaxBackups   int    `yaml:"maxBackups"`
-	MaxAge       int    `yaml:"maxAge"`
-	Compress     bool   `yaml:"compress"`
-	LoginConsole bool   `yaml:"loginConsole"`
-	Format       string `yaml:"format"`
+	Directory    string `mapstructure:"directory" yaml:"directory"`
+	Level        string `mapstructure:"level" yaml:"level"`
+	MaxSize      int    `mapstructure:"max-size" yaml:"max-size"`
+	MaxBackups   int    `mapstructure:"max-backups" yaml:"max-backups"`
+	MaxAge       int    `mapstructure:"max-age" yaml:"max-age"`
+	Compress     bool   `mapstructure:"compress" yaml:"compress"`
+	LoginConsole bool   `mapstructure:"login-console" yaml:"login-console"`
+	Format       string `mapstructure:"format" yaml:"format"`
 }
 
 // 根据指定的类型返回对应zapcore的等级

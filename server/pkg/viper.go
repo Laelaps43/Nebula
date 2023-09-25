@@ -10,17 +10,16 @@ import (
 )
 
 // 配置Viper
-func Viper() *viper.Viper{
+func Viper() *viper.Viper {
 
 	v := viper.New()
 	v.SetConfigType(helper.ConfigType)
 	v.SetConfigName(helper.ConfigName)
 	v.AddConfigPath(helper.ConfigPath)
 	err := v.ReadInConfig()
-	if err != nil{
+	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %w", err))
 	}
-
 
 	// 监听用户的更改
 	v.WatchConfig()
@@ -30,7 +29,7 @@ func Viper() *viper.Viper{
 		fmt.Println("Config file changed:", e.Name)
 	})
 
-	if err = v.Unmarshal(&global.CONFING); err != nil {
+	if err = v.Unmarshal(&global.CONFIG); err != nil {
 		fmt.Println(err)
 	}
 

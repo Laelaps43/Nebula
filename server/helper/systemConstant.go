@@ -12,4 +12,10 @@ const (
 
 	// 日志文件名
 	LogName = "nebula.log"
+
+	// 系统使用Redis
+	CacheRedis = 0
+
+	// 系统使用其他
+	CacheOther = 1
 )

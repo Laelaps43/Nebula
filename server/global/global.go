@@ -7,21 +7,21 @@ import (
 	"nebula.xyz/config"
 )
 
-
 var (
-	
-	// 系统配置
-	CONFING 	config.NEBULA;
 
+	// CONFIG 系统配置
+	CONFIG config.NEBULA
 
-	// 日志
-	Logger		*zap.Logger
+	// Logger 日志
+	Logger *zap.Logger
 
-	// viper变量
-	VP			*viper.Viper
+	// VP viper变量
+	VP *viper.Viper
 
-	// gorm变量
-	DB			*gorm.DB
+	// DB gorm变量
+
+	DB *gorm.DB
+
+	// CACHE 缓存，可能是Redis缓存，也有可能是本地缓存
+	CACHE Cache
 )
-
-

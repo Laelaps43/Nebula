@@ -12,11 +12,11 @@ import (
 )
 
 // zap配置
-func Zap() (logger *zap.Logger){
-	var directory = global.CONFING.ZAP.Directory;
-	if ok, _ := utils.PathExists(directory); !ok{
+func Zap() (logger *zap.Logger) {
+	var directory = global.CONFIG.ZAP.Directory
+	if ok, _ := utils.PathExists(directory); !ok {
 		// 判断文件夹下是否存在指定的文件夹
-		fmt.Printf("指定的文件夹%s不存在，创建文件夹中...\n",directory)
+		fmt.Printf("指定的文件夹%s不存在，创建文件夹中...\n", directory)
 		os.Mkdir(directory, os.ModePerm)
 	}
 

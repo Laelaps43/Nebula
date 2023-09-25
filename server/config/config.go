@@ -7,4 +7,6 @@ type NEBULA struct{
 	MySQL		MySQL	// MySQL配置
 	PGSQL		Pgsql	// postgresql配置
 	SQLITE		Sqlite	// sqlite配置
+	REDIS 		Redis	// Redis 配置
+	JWT			JWT		// JWT配置
 }

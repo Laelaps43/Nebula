@@ -9,8 +9,8 @@ import (
 
 func JWTAuth() gin.HandlerFunc{
 	return func(ctx *gin.Context) {
-		// 从Http头部Authoration获取到token
-		token := ctx.Request.Header.Get("Authoration")
+		// 从Http头部Authorization获取到token
+		token := ctx.Request.Header.Get("Authorization")
 		if token == ""{
 			// token为空
 			model.ErrorWithMessage("请登录！", ctx)
@@ -18,7 +18,7 @@ func JWTAuth() gin.HandlerFunc{
 			return
 		}
 		// 判断token是否有效
-
+		
 		// TODO 
 		ctx.Next()
 	}	

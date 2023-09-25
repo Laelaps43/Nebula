@@ -2,7 +2,7 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
-	web "nebula.xyz/api/v1/web"
+	"nebula.xyz/api/v1/web"
 )
 
 type Hello struct{}

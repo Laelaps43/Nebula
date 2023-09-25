@@ -1,13 +1,12 @@
 package config
+
 // postgresql配置
 
-
-type Pgsql struct{
-	GeneralDB `yaml:",inline"`
+type Pgsql struct {
+	GeneralDB `yaml:",inline" mapstructure:",squash"`
 }
 
-
-func (p Pgsql)Dsn()string{
+func (p Pgsql) Dsn() string {
 	return "user=" + p.UserName + " password=" + p.Password +
-	" dbname=" + p.DBName + " port=" + p.Port + " sslmode=disable TimeZone=Asia/Shanghai"
+		" dbname=" + p.DBName + " port=" + p.Port + " sslmode=disable TimeZone=Asia/Shanghai"
 }
