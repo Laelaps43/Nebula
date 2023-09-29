@@ -7,7 +7,7 @@ import (
 	"nebula.xyz/global"
 )
 
-// 运行整个系统
+// RunServer 运行整个系统
 func RunServer() {
 
 	Router := Routers()

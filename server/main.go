@@ -5,6 +5,7 @@ import (
 	"nebula.xyz/global"
 	"nebula.xyz/pkg"
 	"nebula.xyz/router"
+	"nebula.xyz/sip"
 )
 
 func main() {
@@ -18,5 +19,6 @@ func main() {
 		pkg.RegisterTables()
 	}
 	global.CACHE = pkg.GetCache()
+	sip.InitSipServer()
 	router.RunServer()
 }

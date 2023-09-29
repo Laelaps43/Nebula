@@ -1,4 +1,5 @@
 package helper
+
 // 系统常量
 
 const (
@@ -18,4 +19,8 @@ const (
 
 	// 系统使用其他
 	CacheOther = 1
+
+	// Sip服务器状态
+	SipServerON  = 1
+	SipServerOFF = 0
 )

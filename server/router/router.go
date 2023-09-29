@@ -6,7 +6,7 @@ import (
 	"nebula.xyz/router/web"
 )
 
-// 初始化总路由
+// Routers 初始化总路由
 func Routers() *gin.Engine {
 	// 创建默认路由
 	Router := gin.Default()
@@ -22,10 +22,11 @@ func Routers() *gin.Engine {
 
 	}
 
-	// PrivateGroup := Router.Group(global.CONFING.SERVER.RouterPrefix).Use().Use()
-	// {
+	// 鉴定路由
+	//PrivateGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix).Use(middleware.JWTAuth()).Use()
+	//{
 
-	// }
+	//}
 
 	global.Logger.Info("路由初始化成功！")
 	return Router

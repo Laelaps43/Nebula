@@ -28,8 +28,7 @@ func NewJWT() *JWT {
 	}
 }
 
-// 自定义声明，将被载入到载荷中
-
+// CreateClaims 自定义声明，将被载入到载荷中
 func (j *JWT) CreateClaims(user *system.User, expire time.Time) jwt.CustomClaims {
 	return jwt.CustomClaims{
 		ID:       user.ID,
@@ -43,9 +42,45 @@ func (j *JWT) CreateClaims(user *system.User, expire time.Time) jwt.CustomClaims
 	}
 }
 
-// 创建token
-
+// CreateToken 创建token
 func (j *JWT) CreateToken(claims jwt.CustomClaims) (string, error) {
 	token := jwt4.NewWithClaims(jwt4.SigningMethodHS256, claims)
 	return token.SignedString(j.SigningKey) // 签名
+}
+
+// ParseToken 解析Token
+func (j *JWT) ParseToken(tokenString string) (*jwt.CustomClaims, error) {
+	// 解析Token到CustomClaims
+	token, err := jwt4.ParseWithClaims(tokenString, &jwt.CustomClaims{}, func(token *jwt4.Token) (interface{}, error) {
+		return j.SigningKey, nil
+	})
+	if err != nil {
+		if value, ok := err.(*jwt4.ValidationError); ok {
+			if value.Errors&jwt4.ValidationErrorMalformed != 0 {
+				return nil, TokenMalformed
+			} else if value.Errors&jwt4.ValidationErrorExpired != 0 {
+				return nil, TokenExpired
+			} else if value.Errors&jwt4.ValidationErrorNotValidYet != 0 {
+				return nil, TokenNotValidYet
+			} else {
+				return nil, TokenInvalid
+			}
+		}
+	}
+	if token != nil {
+		if claims, ok := token.Claims.(*jwt.CustomClaims); ok && token.Valid {
+			return claims, nil
+		}
+		return nil, TokenInvalid
+	} else {
+		return nil, TokenInvalid
+	}
+}
+
+// CreateTokenByOlderToken 根据原来的Token生产新Token
+func (j *JWT) CreateTokenByOlderToken(olderToken string, claims *jwt.CustomClaims) (string, error) {
+	v, err, _ := global.SingleFlight.Do("jwt:"+olderToken, func() (interface{}, error) {
+		return j.CreateToken(*claims)
+	})
+	return v.(string), err
 }

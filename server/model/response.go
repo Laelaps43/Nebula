@@ -6,8 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 响应消息体
-
+// Response 响应消息体
 type Response struct {
 	Code    int    `json:"code"`    // Http 状态码
 	Data    any    `json:"data"`    // 返回的数据
@@ -20,7 +19,6 @@ const (
 )
 
 // 需要网前端返回数据
-
 func result(code int, data any, message string, c *gin.Context) {
 	c.JSON(http.StatusOK, Response{
 		code,
@@ -29,36 +27,35 @@ func result(code int, data any, message string, c *gin.Context) {
 	})
 }
 
+// OkWithDetailed 存在成功，携带数据
 func OkWithDetailed(object any, message string, c *gin.Context) {
 	result(SUCCESS, object, message, c)
 }
 
-// 操作成功
-
+// OK 操作成功
 func OK(c *gin.Context) {
 	result(SUCCESS, nil, "操作成功", c)
 }
 
-// 操作成功，并自定义返回消息
-
+// OKWithMessage 操作成功，并自定义返回消息
 func OKWithMessage(message string, c *gin.Context) {
 	result(SUCCESS, nil, message, c)
 }
+func ErrorWithDetailed(object any, message string, c *gin.Context) {
+	result(ERROR, object, message, c)
+}
 
-// 操作失败同时返回错误信息
-
+// ErrorWithMessage 操作失败同时返回错误信息
 func ErrorWithMessage(message string, c *gin.Context) {
 	result(ERROR, nil, message, c)
 }
 
-// 操作失败
-
+// Error 操作失败
 func Error(c *gin.Context) {
 	result(ERROR, nil, "操作失败", nil)
 }
 
-// 服务器内部错误500
-
+// ServerError 服务器内部错误500
 func ServerError(c *gin.Context) {
 	// 返回500错误
 	c.JSON(http.StatusInternalServerError, gin.H{

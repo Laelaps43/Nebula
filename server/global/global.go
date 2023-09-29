@@ -3,9 +3,12 @@ package global
 import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"golang.org/x/sync/singleflight"
 	"gorm.io/gorm"
 	"nebula.xyz/config"
 )
+
+type SipConfig interface{}
 
 var (
 
@@ -24,4 +27,7 @@ var (
 
 	// CACHE 缓存，可能是Redis缓存，也有可能是本地缓存
 	CACHE Cache
+
+	// SingleFlight 用来处理并发控制
+	SingleFlight = &singleflight.Group{}
 )
