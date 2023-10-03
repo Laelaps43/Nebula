@@ -4,6 +4,7 @@ import "nebula.xyz/model"
 
 type User struct {
 	model.NEBULA
+	ID        int    `gorm:"primaryKey"` // 主键ID
 	UserName  string `json:"username" gorm:"comment:用户登录名"`
 	PassWord  string `json:"-" gorm:"comment:用户登录密码"`
 	HeaderImg string `json:"headerImg" gorm:"comment:用户头像"`

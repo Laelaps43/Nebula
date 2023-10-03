@@ -32,9 +32,9 @@ func RegisterTables() {
 	db := global.DB
 	global.Logger.Info("初始化数据库表中...")
 	db.AutoMigrate(
-		system.DeviceChannel{},
 		system.Device{},
-		system.User{},
+		system.DeviceChannel{},
 		system.SipServer{},
+		system.User{},
 	)
 }

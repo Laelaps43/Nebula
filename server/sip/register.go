@@ -94,7 +94,7 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 		device.Status = helper.DeviceOffline
 		global.Logger.Info("设备注销", zap.String("device Id", device.DeviceId))
 		_ = device.DeviceUpdate()
-		response := sip.NewResponseFromRequest("", req, http.StatusForbidden, "Forbidden", "")
+		response := sip.NewResponseFromRequest("", req, http.StatusOK, http.StatusText(http.StatusOK), "")
 		_ = tx.Respond(response)
 		return
 	}
@@ -134,7 +134,8 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 	})
 	global.Logger.Info("设备添加成功！")
 	_ = tx.Respond(response)
-	go QueryDeviceSip(device)
+	go QueryDeviceInfo(device)
+	go QueryDeviceCatalog(device)
 }
 
 // verify 验证请求

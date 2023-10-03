@@ -13,7 +13,7 @@ import (
 
 func Message(request sip.Request, transaction sip.ServerTransaction) {
 
-	global.Logger.Error("MESSAGE-Request:", zap.Any("request", request))
+	//global.Logger.Error("MESSAGE-Request:", zap.Any("request", request))
 	if l, ok := request.ContentLength(); l.Equals(0) || !ok {
 		global.Logger.Info("请求的消息体长度为0")
 		_ = transaction.Respond(sip.NewResponseFromRequest("", request, http.StatusOK, http.StatusText(http.StatusOK), ""))
@@ -41,6 +41,20 @@ func Message(request sip.Request, transaction sip.ServerTransaction) {
 				ChannelCount: message.MaxCamera,
 			}
 			_ = device.DeviceUpdate()
+		case "Catalog":
+			// TODO 媒体状态处理
+			for _, item := range message.DeviceList {
+				channel, _ := item.DeviceChannelById()
+				item.DeviceId = message.DeviceID
+				item.ParentID = message.DeviceID
+				via, _ := request.ViaHop()
+				item.Transport = via.Transport
+				if channel.ChannelId != "" {
+					_ = item.ChannelUpdate()
+				} else {
+					_ = item.ChannelAdd()
+				}
+			}
 		}
 		_ = transaction.Respond(sip.NewResponseFromRequest("", request, http.StatusOK, http.StatusText(http.StatusOK), ""))
 	} else if message.XMLName.Local == "Notify" {
