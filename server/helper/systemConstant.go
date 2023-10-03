@@ -23,4 +23,22 @@ const (
 	// Sip服务器状态
 	SipServerON  = 1
 	SipServerOFF = 0
+
+	// 设备状态
+	DeviceOnline  = "1"
+	DeviceOffline = "0"
+)
+
+type QueryType string
+
+const (
+	DeviceStatusCmdType   QueryType = "DeviceStatus"
+	CatalogCmdType        QueryType = "Catalog"
+	DeviceInfoCmdType     QueryType = "DeviceInfo"
+	RecordInfoCmdType     QueryType = "RecordInfo"
+	AlarmCmdType          QueryType = "Alarm"
+	ConfigDownloadCmdType QueryType = "ConfigDownload"
+	PresetQueryCmdType    QueryType = "PresetQuery"
+	MobilePositionCmdType QueryType = "MobilePosition"
+	KeepaliveCmdType      QueryType = "Keepalive"
 )

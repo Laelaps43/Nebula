@@ -58,7 +58,7 @@ func InitSipServer() {
 		sipServer.SipId = global.CONFIG.SIP.SipId
 		sipServer.Port = global.CONFIG.SIP.Port
 		sipServer.IP = global.CONFIG.SIP.Ip
-		sipServer.Region = global.CONFIG.SIP.Region
+		sipServer.Realm = global.CONFIG.SIP.Realm
 		sipServer.Password = global.CONFIG.SIP.Password
 		sipServer.UserAgent = global.CONFIG.SIP.UserAgent
 		sipServer.DevicePrefix = global.CONFIG.SIP.DevicePrefix
@@ -72,5 +72,6 @@ func InitSipServer() {
 }
 
 func registerHandler() {
-	Server.OnRequest(sip.REGISTER, Register)
+	_ = Server.OnRequest(sip.REGISTER, Register)
+	_ = Server.OnRequest(sip.MESSAGE, Message)
 }

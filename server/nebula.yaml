@@ -10,7 +10,7 @@ server:
 sip:
   ip: "192.168.2.11"
   port: 5060
-  region: "4401020049"
+  realm: "4401020049"
   sip-id: "44010200492000000001" # SIP服务器ID
   password: "123456"
   user-agent: "nebula"

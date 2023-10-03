@@ -7,10 +7,10 @@ import "nebula.xyz/model"
 type SipServer struct {
 	model.NEBULA
 
-	IP     string `gorm:"comment:SIP服务器地址"`
-	Port   uint   `gorm:"comment:SIP服务器端口"`
-	Region string `gorm:"comment:SIP区域"`
-	SipId  string `gorm:"comment:SIP服务器ID"`
+	IP    string `gorm:"comment:SIP服务器地址"`
+	Port  uint   `gorm:"comment:SIP服务器端口"`
+	Realm string `gorm:"comment:SIP区域"`
+	SipId string `gorm:"comment:SIP服务器ID"`
 	// TODO 是否需要加密
 	Password      string `gorm:"comment:SIP密码"`
 	UserAgent     string `gorm:"comment:SIP用户代理"`

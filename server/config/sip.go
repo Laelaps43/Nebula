@@ -5,7 +5,7 @@ package config
 type Sip struct {
 	Ip            string `mapstructure:"ip" yaml:"ip"`                         // SIP 服务地址
 	Port          uint   `mapstructure:"port" yaml:"port"`                     // SIP 端口
-	Region        string `mapstructure:"region" yaml:"region"`                 // SIP 区域
+	Realm         string `mapstructure:"realm" yaml:"realm"`                   // SIP 区域
 	SipId         string `mapstructure:"sip-id" yaml:"sip-id"`                 // SIP 服务器ID
 	Password      string `mapstructure:"password" yaml:"password"`             // SIP 密码
 	UserAgent     string `mapstructure:"user-agent" yaml:"user-agent"`         // 代理
