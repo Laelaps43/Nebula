@@ -10,7 +10,7 @@
         <!-- content -->
         <a-layout-content>
           <!-- divider -->
-          <a-divider v-if="routeMeta.breadcrumb" class="line" />
+          <!-- <a-divider v-if="routeMeta.breadcrumb" class="line" /> -->
           <!-- router-view -->
           <!-- 这个出口不知道干啥 -->
           <template v-if="routeMeta.hiddenWrap">

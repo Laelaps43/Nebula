@@ -35,7 +35,6 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { time } from 'echarts';
 import { useUserStore } from '/@/store/modules/user';
 
   const userStore = useUserStore();
