@@ -35,6 +35,7 @@ func RegisterTables() {
 		system.Device{},
 		system.DeviceChannel{},
 		system.SipServer{},
+		system.Stream{},
 		system.User{},
 	)
 }

@@ -1,6 +1,6 @@
 server:
   mode: dev # 系统影响环境，dev prod test
-  port: 8080  # web运行的端口号
+  port: 8081  # web运行的端口号
   route-prefix: "abc"  # 路由前缀
   login-max-num:  "6" # 最大登录次数
   login-timeout:  "1000"
@@ -8,7 +8,7 @@ server:
   db-type: mysql
 
 sip:
-  ip: "192.168.2.11"
+  ip: "192.168.2.116"
   port: 5060
   realm: "4401020049"
   sip-id: "44010200492000000001" # SIP服务器ID
@@ -16,6 +16,14 @@ sip:
   user-agent: "nebula"
   device-prefix: "37070000081118"       # 设备前缀
   channel-prefix: "37070000081318"       # 通道前缀
+
+media:
+  address: "192.168.2.116"
+  rtp: "10000"  # media 接收GB28181RTP流端口
+  restful: 8080  # media 服务器restfulapi地址
+  secret: 035c73f7-bb6b-4889-a715-d9eb2d1925cc # zlm secret key 用来请求zlm接口验证
+  rtsp-port: 8554 # rtsp的端口
+  rtmp-port: 1935 # rtmp的端口
 
 jwt:
   signing-key: laelaps

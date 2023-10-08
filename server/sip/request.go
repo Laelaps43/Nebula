@@ -21,10 +21,10 @@ func createMessageRequest(
 	body string) (sip.Request, *sip.RequestBuilder) {
 	requestBuilder := sip.NewRequestBuilder()
 	requestBuilder.SetFrom(newFromAddress(newParams(map[string]string{"tag": utils.RandString(32)})))
-	to := newToAddress(device)
+	to := newToAddress(&device)
 	requestBuilder.SetTo(to)
 	requestBuilder.SetRecipient(to.Uri)
-	requestBuilder.AddVia(newVia(device))
+	requestBuilder.AddVia(newVia(&device))
 	requestContentType := sip.ContentType(contentType)
 	requestBuilder.SetContentType(&requestContentType)
 	requestBuilder.SetMethod(method)
@@ -35,6 +35,34 @@ func createMessageRequest(
 	//requestBuilder.SetSeqNo()
 	request, _ := requestBuilder.Build()
 	return request, requestBuilder
+}
+
+func createVideoRequest(
+	channel *system.DeviceChannel,
+	device *system.Device,
+	method sip.RequestMethod,
+	body string,
+) (sip.Request, *sip.RequestBuilder) {
+	rb := sip.NewRequestBuilder()
+	rb.SetFrom(newFromAddress(newParams(map[string]string{"tag": utils.RandString(32)})))
+	to := newChannelAddress(channel, device)
+	rb.SetTo(to)
+	rb.SetRecipient(to.Uri)
+	rb.AddVia(newVia(device))
+	contentType := sip.ContentType(contentTypeSDP)
+	rb.SetContentType(&contentType)
+	rb.SetMethod(method)
+	userAgent := sip.UserAgentHeader(sipServer.UserAgent)
+	rb.SetUserAgent(&userAgent)
+	rb.AddHeader(&sip.GenericHeader{
+		HeaderName: "Subject",
+		Contents:   fmt.Sprintf("%s:%s,%s:%s", channel.ChannelId, device.Realm, device.DeviceId, device.Realm),
+	})
+	rb.SetBody(body)
+	// TODO 序列号
+	rb.SetSeqNo(1)
+	request, _ := rb.Build()
+	return request, rb
 }
 
 // 处理参数
@@ -60,7 +88,7 @@ func newFromAddress(params *sip.Params) *sip.Address {
 }
 
 // 返回地址
-func newToAddress(device system.Device) *sip.Address {
+func newToAddress(device *system.Device) *sip.Address {
 	port64, _ := strconv.Atoi(device.Port)
 	port := sip.Port(port64)
 	return &sip.Address{
@@ -73,7 +101,7 @@ func newToAddress(device system.Device) *sip.Address {
 }
 
 // via
-func newVia(device system.Device) *sip.ViaHop {
+func newVia(device *system.Device) *sip.ViaHop {
 	port64, _ := strconv.Atoi(device.Port)
 	port := sip.Port(port64)
 	params := newParams(map[string]string{
@@ -86,5 +114,18 @@ func newVia(device system.Device) *sip.ViaHop {
 		Host:            sipServer.SipId,
 		Port:            &port,
 		Params:          *params,
+	}
+}
+
+// 返回通道地址
+func newChannelAddress(channel *system.DeviceChannel, device *system.Device) *sip.Address {
+	port64, _ := strconv.Atoi(device.Port)
+	port := sip.Port(port64)
+	return &sip.Address{
+		Uri: &sip.SipUri{
+			FUser: sip.String{Str: channel.ChannelId},
+			FHost: device.IP,
+			FPort: &port,
+		},
 	}
 }

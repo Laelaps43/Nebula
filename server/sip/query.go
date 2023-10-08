@@ -11,6 +11,7 @@ import (
 )
 
 func QueryDeviceInfo(device system.Device) {
+	defer Wait.Done()
 	body := sb.DeviceQueryInfo{DeviceId: device.DeviceId, CmdType: helper.DeviceInfoCmdType, Sn: utils.GetSn()}
 
 	request, _ := createMessageRequest(device, contentTypeXML, sip.MESSAGE, body.ToXML())
@@ -25,6 +26,7 @@ func QueryDeviceInfo(device system.Device) {
 }
 
 func QueryDeviceCatalog(device system.Device) {
+	defer Wait.Done()
 	global.Logger.Info("查询设备通道", zap.String("deviceId", device.DeviceId))
 	body := sb.DeviceQueryInfo{DeviceId: device.DeviceId, CmdType: helper.CatalogCmdType, Sn: utils.GetSn()}
 

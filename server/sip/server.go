@@ -18,9 +18,10 @@ import (
 
 // Server Sip Server
 var (
-	Server    gosip.Server
-	SyncOnce  sync.Once
-	sipServer *system.SipServer
+	Server      gosip.Server
+	SyncOnce    sync.Once
+	sipServer   *system.SipServer
+	mediaServer *system.MediaServer
 )
 
 func NewSipServer() {
@@ -52,6 +53,7 @@ func NewSipServer() {
 
 func InitSipServer() {
 	result := global.DB.Order("sort asc").Where("status = ?", helper.SipServerON).First(&sipServer)
+	// 信令服务器设置
 	// 数据库中可以找到一条数据，则使用数据库中查找到的，负责使用配置文件
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		global.Logger.Debug("未从数据库中获取到服务器信息，从配置文件中获取。")
@@ -68,6 +70,19 @@ func InitSipServer() {
 		global.DB.Create(&sipServer)
 	}
 	global.Logger.Info("初始化SIP服务中...")
+	// 初始化媒体服务器
+	result = global.DB.Order("sort asc").Where("status = ?", helper.MediaStatusON).First(&mediaServer)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		global.Logger.Debug("未从数据库中获取到媒体服务器信息，从配置文件中获取。")
+		mediaServer.Address = global.CONFIG.Media.Address
+		mediaServer.RTSPPort = global.CONFIG.Media.RTSPPort
+		mediaServer.Restful = global.CONFIG.Media.Restful
+		mediaServer.RTP = global.CONFIG.Media.RTP
+		mediaServer.RTMPPort = global.CONFIG.Media.RTMPPort
+		mediaServer.Secret = global.CONFIG.Media.Secret
+		global.DB.Create(&mediaServer)
+	}
+
 	NewSipServer()
 }
 

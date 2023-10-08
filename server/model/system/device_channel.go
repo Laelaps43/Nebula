@@ -54,3 +54,11 @@ func (d *DeviceChannel) ChannelAdd() error {
 		return nil
 	}
 }
+
+func (d *DeviceChannel) IsExist() bool {
+	result, err := d.DeviceChannelById()
+	if err != nil || result.ChannelId == "" {
+		return false
+	}
+	return true
+}

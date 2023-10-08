@@ -27,6 +27,10 @@ const (
 	// 设备状态
 	DeviceOnline  = "1"
 	DeviceOffline = "0"
+
+	ChannelStatusON = "ON"
+
+	MediaStatusON = 1
 )
 
 type QueryType string

@@ -12,6 +12,7 @@ import (
 	"nebula.xyz/utils"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -22,6 +23,8 @@ const (
 	WWWHeader             = "WWW-Authenticate"
 	ExpiresTime           = 3600
 )
+
+var Wait = sync.WaitGroup{}
 
 func Register(req sip.Request, tx sip.ServerTransaction) {
 	global.Logger.Info("收到SIP Register请求，正在处理")
@@ -134,8 +137,10 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 	})
 	global.Logger.Info("设备添加成功！")
 	_ = tx.Respond(response)
+	Wait.Add(2)
 	go QueryDeviceInfo(device)
 	go QueryDeviceCatalog(device)
+	Wait.Wait()
 }
 
 // verify 验证请求

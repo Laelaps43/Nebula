@@ -11,4 +11,5 @@ type NEBULA struct {
 	REDIS  Redis  // Redis 配置
 	JWT    JWT    // JWT配置
 	SIP    Sip    // sip配置
+	Media  Media  // 媒体服务器配置
 }
