@@ -2,8 +2,10 @@ package sip
 
 import (
 	"encoding/xml"
+	"errors"
 	"github.com/ghettovoice/gosip/sip"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"nebula.xyz/global"
 	sb "nebula.xyz/model/sip"
 	"nebula.xyz/model/system"
@@ -44,12 +46,14 @@ func Message(request sip.Request, transaction sip.ServerTransaction) {
 		case "Catalog":
 			// TODO 媒体状态处理
 			for _, item := range message.DeviceList {
-				channel, _ := item.DeviceChannelById()
+				err := item.DeviceChannelById()
+				channel := item
 				item.DeviceId = message.DeviceID
 				item.ParentID = message.DeviceID
 				via, _ := request.ViaHop()
 				item.Transport = via.Transport
-				if channel.ChannelId != "" {
+				global.Logger.Info("添加通道", zap.String("id", channel.ChannelId))
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
 					_ = item.ChannelUpdate()
 				} else {
 					_ = item.ChannelAdd()
@@ -58,12 +62,13 @@ func Message(request sip.Request, transaction sip.ServerTransaction) {
 		}
 		_ = transaction.Respond(sip.NewResponseFromRequest("", request, http.StatusOK, http.StatusText(http.StatusOK), ""))
 	} else if message.XMLName.Local == "Notify" {
+		nowTime := time.Now()
 		switch message.CmdType {
 		case "Keepalive":
 			// 心跳
 			device := &system.Device{
 				DeviceId:   message.DeviceID,
-				KeepLiveAt: time.Now(),
+				KeepLiveAt: &nowTime,
 			}
 			_ = device.DeviceUpdate()
 			err := transaction.Respond(sip.NewResponseFromRequest("", request, http.StatusOK, http.StatusText(http.StatusOK), ""))

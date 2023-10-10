@@ -29,12 +29,11 @@ func (d *DeviceChannel) TableName() string {
 }
 
 // DeviceChannelById 根据通道Id查找通道
-func (d *DeviceChannel) DeviceChannelById() (DeviceChannel, error) {
-	tmp := DeviceChannel{}
-	if err := global.DB.Where("channel_id = ?", d.ChannelId).First(&tmp).Error; err != nil {
-		return DeviceChannel{}, err
+func (d *DeviceChannel) DeviceChannelById() error {
+	if err := global.DB.Where("channel_id = ?", d.ChannelId).First(&d).Error; err != nil {
+		return err
 	}
-	return tmp, nil
+	return nil
 }
 
 // ChannelUpdate 更新通道信息
@@ -56,8 +55,8 @@ func (d *DeviceChannel) ChannelAdd() error {
 }
 
 func (d *DeviceChannel) IsExist() bool {
-	result, err := d.DeviceChannelById()
-	if err != nil || result.ChannelId == "" {
+	err := d.DeviceChannelById()
+	if err != nil || d.ChannelId == "" {
 		return false
 	}
 	return true

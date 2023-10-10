@@ -28,9 +28,21 @@ const (
 	DeviceOnline  = "1"
 	DeviceOffline = "0"
 
-	ChannelStatusON = "ON"
+	ChannelStatusON  = "ON"
+	ChannelStatusOFF = "OFF"
 
 	MediaStatusON = 1
+
+	ZLMeidaHookSuccess = 0
+	ZLMeidaHookFail    = 1
+
+	ZLMeidaHookFailMessage    = "parser on_play_hook interface param fail, auth fail and not allow play"
+	ZLMeidaHookSuccessMessage = "success"
+)
+
+const (
+	ZlmGetApiList  = "getApiList"
+	ZlmStartRecord = "startRecord"
 )
 
 type QueryType string

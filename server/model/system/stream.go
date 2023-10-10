@@ -23,18 +23,30 @@ type Stream struct {
 }
 
 // GetStreamById 根据Stream Id 查找Stream
-func (s *Stream) GetStreamById() (*Stream, error) {
-	tmp := &Stream{}
-	if err := global.DB.Where("stream_id = ?", s.StreamId).First(&tmp).Error; err != nil {
-		return &Stream{}, err
+func (s *Stream) GetStreamById() error {
+	if err := global.DB.Where("stream_id = ?", s.StreamId).First(&s).Error; err != nil {
+		return err
 	}
-	return tmp, nil
+	return nil
 }
 
 // Save 保存流信息
 func (s *Stream) Save() error {
 	if err := global.DB.Create(s).Error; err != nil {
 		global.Logger.Error("保存流信息错误")
+		return err
+	}
+	return nil
+}
+
+func (s *Stream) Update() error {
+	if err := global.DB.Where("stream_id = ?", s.StreamId).Updates(s).Error; err != nil {
+		return err
+	}
+	return nil
+}
+func (s *Stream) GetStreamByDeviceAndChannel() error {
+	if err := global.DB.Where("device_id = ? and channel_id = ?", s.DeviceId, s.ChannelId).First(&s).Error; err != nil {
 		return err
 	}
 	return nil

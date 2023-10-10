@@ -5,7 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"nebula.xyz/global"
 	"nebula.xyz/model"
+	resp "nebula.xyz/model/response"
 	"nebula.xyz/model/system"
+	"strconv"
 )
 
 type DeviceApi struct{}
@@ -47,11 +49,42 @@ func (d *DeviceApi) UpdateDeviceInf(c *gin.Context) {
 	if len(device.DeviceId) != 20 || len(device.Name) == 0 {
 		model.ErrorWithMessage("参数错误", c)
 	}
-	
+
 	err = deviceService.UpdateDeviceInfoById(device)
 	if err != nil {
 		model.ErrorWithMessage("更新错误", c)
 		return
 	}
 	model.OKWithMessage("更新成功", c)
+}
+
+// GenerateDevice 生成设备，以及要生成通道的个数
+func (d *DeviceApi) GenerateDevice(c *gin.Context) {
+	genChannelNum := c.DefaultQuery("channelNum", "0")
+	genInfo := resp.GenerateInfo{}
+	device, err := deviceService.GenerateDevice()
+	if err != nil {
+		model.ErrorWithMessage("生成设备失败", c)
+		return
+	}
+	genInfo.Device = device
+	num, _ := strconv.Atoi(genChannelNum)
+	if num <= 0 {
+		model.OkWithDetailed(genInfo, "生成设备成功", c)
+		return
+	}
+	channels, err := channelService.GenerateChannel(num, device)
+	if err != nil {
+		model.ErrorWithMessage("生成通道失败", c)
+		return
+	}
+	genInfo.Channels = channels
+	genInfo.ChannelSum = len(channels)
+	model.OkWithDetailed(genInfo, "生成设备成功", c)
+	return
+}
+
+// DeleteDevice 删除指定设备
+func (d *DeviceApi) DeleteDevice(c *gin.Context) {
+	// TODO 删除指定设备
 }

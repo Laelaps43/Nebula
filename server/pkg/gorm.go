@@ -34,6 +34,7 @@ func RegisterTables() {
 	db.AutoMigrate(
 		system.Device{},
 		system.DeviceChannel{},
+		system.MediaServer{},
 		system.SipServer{},
 		system.Stream{},
 		system.User{},

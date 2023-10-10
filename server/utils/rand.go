@@ -8,12 +8,23 @@ import (
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+const numSet = "0123456789"
 
 func RandString(n int) string {
 	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	result := make([]byte, n)
 	for i := range result {
 		result[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(result)
+}
+
+// RandInt 生成指定位数的Int
+func RandInt(n int) string {
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	result := make([]byte, n)
+	for i := range result {
+		result[i] = numSet[seededRand.Intn(len(numSet))]
 	}
 	return string(result)
 }

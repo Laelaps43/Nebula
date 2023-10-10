@@ -16,5 +16,6 @@ func (d *DeviceRouter) InitDeviceRouter(group *gin.RouterGroup) {
 		deviceRouter.GET("", deviceApi.GetAllDeviceInfo)
 		deviceRouter.GET(":deviceId", deviceApi.GetDeviceInfoById)
 		deviceRouter.PUT("", deviceApi.UpdateDeviceInf)
+		deviceRouter.GET("generate", deviceApi.GenerateDevice)
 	}
 }

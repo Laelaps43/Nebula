@@ -2,7 +2,11 @@ package system
 
 // sip实体
 
-import "nebula.xyz/model"
+import (
+	"nebula.xyz/global"
+	"nebula.xyz/helper"
+	"nebula.xyz/model"
+)
 
 type SipServer struct {
 	model.NEBULA
@@ -18,4 +22,20 @@ type SipServer struct {
 	ChannelPrefix string `gorm:"comment:通道前缀"`
 	Status        uint   `gorm:"comment:是否开启 1 开启，0 关闭"`
 	Sort          uint   `gorm:"comment:排序"`
+}
+
+// GetSipServerById 根据sip_id 获取sipServer
+func (s *SipServer) GetSipServerById() (err error) {
+	if err = global.DB.Model(&SipServer{}).Where("sip_id = ?", s.SipId).First(&s).Error; err != nil {
+		return nil
+	}
+	return err
+}
+
+// GetSipServerOnLine 获取设备在线Sip服务器
+func (s *SipServer) GetSipServerOnLine() (err error) {
+	if err = global.DB.Model(&SipServer{}).Order("sort asc").Where("status = ?", helper.SipServerON).First(&s).Error; err != nil {
+		return err
+	}
+	return nil
 }

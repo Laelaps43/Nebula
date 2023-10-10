@@ -30,4 +30,6 @@ var (
 
 	// SingleFlight 用来处理并发控制
 	SingleFlight = &singleflight.Group{}
+
+	MediaServer Media
 )

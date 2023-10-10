@@ -4,9 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ghettovoice/gosip/sip"
-	"math/big"
-	"strings"
-
 	//"nebula.xyz/sip/sdp"
 	"net"
 	"strconv"
@@ -34,23 +31,23 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 	var channel system.DeviceChannel
 	var err error
 	// 数据库中不存在对应通道
-	if channel, err = channelTmp.DeviceChannelById(); err != nil {
+	if err = channelTmp.DeviceChannelById(); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("通道不存在")
 		}
 		return nil, err
 	}
+	channel = *channelTmp
 	stream.DeviceId = channel.DeviceId
-	deviceTmp := &system.Device{DeviceId: channel.DeviceId}
+	device := &system.Device{DeviceId: channel.DeviceId}
 
 	// TODO 拉流
 	// 推流处理
 	if channel.Status != helper.ChannelStatusON {
 		return nil, errors.New("通道已离线")
 	}
-	var device system.Device
 	// 判断设备是否存在
-	if device, err = deviceTmp.DeviceById(); err != nil {
+	if err = device.DeviceById(); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("设备不能存在")
 		}
@@ -71,7 +68,7 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 		}
 		ssrcLock.Unlock()
 	}
-	stream, err = sipPlayPush(stream, &channel, &device)
+	stream, err = sipPlayPush(stream, &channel, device)
 	if err != nil {
 		global.Logger.Info("点播失败", zap.Error(err))
 		return nil, err
@@ -79,13 +76,13 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 	global.Logger.Info("点播成功......")
 
 	media := global.CONFIG.Media
-	zlmId := ToHex(stream.StreamId)
+	zlmId := utils.StreamToHex(stream.StreamId)
 	stream.HTTP = fmt.Sprintf("http://%s:%s/rtp/%s/hls.m3u8", media.Address, media.Restful, zlmId)
 	stream.RTMP = fmt.Sprintf("rtmp://%s:%s/rtp/%s", media.Address, media.RTMPPort, zlmId)
 	stream.RTSP = fmt.Sprintf("rtsp://%s:%s/rtp/%s", media.Address, media.RTSPPort, zlmId)
 	stream.WSFLV = fmt.Sprintf("ws://%s:%s/rtp/%s.live.flv", media.Address, media.Restful, zlmId)
 	global.Logger.Info("ab", zap.Strings("直播流", []string{stream.HTTP, stream.RTMP, stream.RTSP, stream.WSFLV}))
-	err = stream.Save()
+	err = stream.Update()
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +145,7 @@ func sipPlayPush(
 	//	name = "Playback"
 	//	protocal = "RTP/RTCP"
 	//}
-	port, _ := strconv.Atoi(global.CONFIG.Media.RTP)
+	port, _ := strconv.Atoi(global.MediaServer.GetRTP())
 	video := sdp.Media{
 		Description: sdp.MediaDescription{
 			Type:     "video",
@@ -170,11 +167,11 @@ func sipPlayPush(
 	msg := &sdp.Message{
 		Origin: sdp.Origin{
 			Username: device.DeviceId, // 媒体服务器id
-			Address:  global.CONFIG.Media.Address,
+			Address:  global.MediaServer.GetAddress(),
 		},
 		Name: name,
 		Connection: sdp.ConnectionData{
-			IP:  net.ParseIP(global.CONFIG.Media.Address),
+			IP:  net.ParseIP(global.MediaServer.GetAddress()),
 			TTL: 0,
 		},
 		Timing: []sdp.Timing{
@@ -222,16 +219,10 @@ func GetSSRC(c *system.DeviceChannel) string {
 	for {
 		key := fmt.Sprintf("%s%s%s", c.ChannelId[17:20], sipServer.Realm[7:10], utils.Get4SSRC())
 		fmt.Println(key)
-		streamT := &system.Stream{StreamId: key}
-		_, err := streamT.GetStreamById()
+		stream := &system.Stream{StreamId: key}
+		err := stream.GetStreamById()
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return key
 		}
 	}
-}
-
-func ToHex(s string) string {
-	d := new(big.Int)
-	d.SetString(s, 10)
-	return fmt.Sprintf("%08s", strings.ToUpper(d.Text(16)))
 }

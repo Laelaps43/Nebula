@@ -8,12 +8,16 @@ type WebApi struct {
 	UserApi
 	VideoApi
 	DeviceApi
+	ZlmHookApi
 }
 
 var (
-	userService   = web.WebServiceAll.UserService
-	jwtService    = web.WebServiceAll.JwtService
-	deviceService = web.WebServiceAll.DeviceService
+	userService    = web.WebServiceAll.UserService
+	jwtService     = web.WebServiceAll.JwtService
+	deviceService  = web.WebServiceAll.DeviceService
+	zlmService     = web.WebServiceAll.ZLMService
+	videoService   = web.WebServiceAll.VideoService
+	channelService = web.WebServiceAll.ChannelService
 )
 
 var WebApiAll = new(WebApi)

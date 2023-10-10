@@ -12,6 +12,7 @@ func (h *Hello) InitVideoRouter(Router *gin.RouterGroup) (R gin.IRouter) {
 	videoApi := web.WebApiAll.VideoApi
 	{
 		helloRouter.GET("play", videoApi.PlayVideo)
+		helloRouter.POST("record", videoApi.RecordVideo)
 	}
 	return helloRouter
 }

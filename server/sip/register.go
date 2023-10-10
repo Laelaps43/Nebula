@@ -88,7 +88,12 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 
 	if expires[0].(*sip.Expires).Equals(new(sip.Expires)) {
 		// 请求为注销请求
-		device, _ := fromInfo.DeviceById()
+		if err := fromInfo.DeviceById(); err != nil {
+			global.Logger.Error("获取设备失败")
+			return
+		}
+
+		device := fromInfo
 		// 判断设备是否存储数据库中
 		if device.DeviceId == "" {
 			global.Logger.Info("设备注销失败，设备不存在系统中。", zap.String("device Id", fromInfo.DeviceId))
@@ -103,11 +108,17 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 	}
 
 	// 在数据库中是否存在对应的设备
-	device, _ := fromInfo.DeviceById()
+	if err := fromInfo.DeviceById(); err != nil {
+		global.Logger.Error("获取设备失败")
+		return
+	}
+
+	device := fromInfo
+	nowTime := time.Now()
 	if device.DeviceId == "" {
 		device = fromInfo
-		device.RegisterAt = time.Now()
-		device.KeepLiveAt = time.Now()
+		device.RegisterAt = &nowTime
+		device.KeepLiveAt = &nowTime
 		device.Expires = expires[0].Value()
 		device.Status = helper.DeviceOnline
 		device.IP = fromIp
@@ -115,8 +126,8 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 		_ = device.DeviceAdd()
 	} else {
 		var deviceSql system.Device
-		deviceSql.RegisterAt = time.Now()
-		deviceSql.KeepLiveAt = time.Now()
+		deviceSql.RegisterAt = &nowTime
+		deviceSql.KeepLiveAt = &nowTime
 		deviceSql.Status = helper.DeviceOnline
 		deviceSql.IP = fromIp
 		deviceSql.Port = fromPort
