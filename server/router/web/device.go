@@ -15,7 +15,7 @@ func (d *DeviceRouter) InitDeviceRouter(group *gin.RouterGroup) {
 		// 获取所有Device信息
 		deviceRouter.GET("", deviceApi.GetAllDeviceInfo)
 		deviceRouter.GET(":deviceId", deviceApi.GetDeviceInfoById)
-		deviceRouter.PUT("", deviceApi.UpdateDeviceInf)
+		deviceRouter.PUT("", deviceApi.UpdateDeviceInfo)
 		deviceRouter.GET("generate", deviceApi.GenerateDevice)
 	}
 }

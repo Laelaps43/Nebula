@@ -54,10 +54,27 @@ func (d *DeviceChannel) ChannelAdd() error {
 	}
 }
 
+// IsExist 判断通道是否存在
 func (d *DeviceChannel) IsExist() bool {
 	err := d.DeviceChannelById()
 	if err != nil || d.ChannelId == "" {
 		return false
 	}
 	return true
+}
+
+// GetAllChannels 获取所有通道
+func (d *DeviceChannel) GetAllChannels() (channels []DeviceChannel, err error) {
+	if err = global.DB.Model(&DeviceChannel{}).Find(&channels).Error; err != nil {
+		return nil, err
+	}
+	return
+}
+
+// UpdateChannelInfoById 根据Id更新通道信息
+func (d *DeviceChannel) UpdateChannelInfoById() (err error) {
+	if err = global.DB.Model(&DeviceChannel{}).Where("channel_id = ?", d.ChannelId).Updates(d).Error; err != nil {
+		return err
+	}
+	return
 }

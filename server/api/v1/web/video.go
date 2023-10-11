@@ -13,9 +13,8 @@ import (
 
 type VideoApi struct{}
 
-// 点播
-func (h *VideoApi) PlayVideo(ctx *gin.Context) {
-
+// PlayVideo 点播
+func (v *VideoApi) PlayVideo(ctx *gin.Context) {
 	global.Logger.Info("执行PlayVideo函数")
 	sip.Play(&system.Stream{
 		ChannelId: "37070000081318000012",
@@ -24,8 +23,29 @@ func (h *VideoApi) PlayVideo(ctx *gin.Context) {
 	model.OKWithMessage("Hello!!!", ctx)
 }
 
+// StopPlay 停止直播，这里需要考虑流是否在录像
+func (v *VideoApi) StopPlay(ctx *gin.Context) {
+	var stop *request.StopPlay
+	err := ctx.ShouldBindJSON(&stop)
+	if err != nil {
+		model.ErrorWithMessage("StopPlay绑定时间失败", ctx)
+		return
+	}
+	stream := &system.Stream{
+		DeviceId:  stop.DeviceId,
+		ChannelId: stop.ChannelId,
+	}
+	err = stream.GetStreamByDeviceAndChannel()
+	if err != nil {
+		model.ErrorWithMessage("没有找到对应的流", ctx)
+		return
+	}
+	videoService.StopPlay(stream)
+
+}
+
 // RecordVideo 开始录像
-func (h *VideoApi) RecordVideo(ctx *gin.Context) {
+func (v *VideoApi) RecordVideo(ctx *gin.Context) {
 	global.Logger.Info("执行RecordVideo函数")
 	var record request.RecordVideo
 	err := ctx.ShouldBindJSON(&record)

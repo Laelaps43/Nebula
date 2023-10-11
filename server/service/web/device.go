@@ -18,7 +18,7 @@ func (d *DeviceService) GetAllDeviceInfo() (devices []system.Device, err error) 
 }
 
 // GetDeviceInfoById 获取指定设备信息
-func (d *DeviceService) GetDeviceInfoById(id string) (device system.Device, err error) {
+func (d *DeviceService) GetDeviceInfoById(id string) (device *system.Device, err error) {
 	err = global.DB.Where("device_id = ?", id).First(&device).Error
 	return
 }

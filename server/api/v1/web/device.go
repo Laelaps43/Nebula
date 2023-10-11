@@ -38,8 +38,8 @@ func (d *DeviceApi) GetDeviceInfoById(c *gin.Context) {
 	model.OkWithDetailed(device, "获取成功", c)
 }
 
-// UpdateDeviceInf 根据设备Id更新设备名称，当前只可以更新名称
-func (d *DeviceApi) UpdateDeviceInf(c *gin.Context) {
+// UpdateDeviceInfo UpdateDeviceInf 根据设备Id更新设备名称，当前只可以更新名称
+func (d *DeviceApi) UpdateDeviceInfo(c *gin.Context) {
 	var device system.Device
 	err := c.ShouldBindJSON(&device)
 	if err != nil {

@@ -22,6 +22,7 @@ func Routers() *gin.Engine {
 		webRouter.InitVideoRouter(PublicGroup)
 		webRouter.InitDeviceRouter(PublicGroup)
 		webRouter.InitZlmHookRouter(PublicGroup)
+		webRouter.InitChannelRoute(PublicGroup)
 	}
 
 	// 鉴定路由

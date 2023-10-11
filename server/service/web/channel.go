@@ -47,3 +47,20 @@ func (c *ChannelService) GenerateChannel(n int, device *system.Device) (channels
 	}
 	return
 }
+
+// GetChannelInfoById 根据通道Id获取通道信息
+func (c *ChannelService) GetChannelInfoById(id string) (channel *system.DeviceChannel, err error) {
+	channel = &system.DeviceChannel{
+		ChannelId: id,
+	}
+	err = channel.DeviceChannelById()
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+func (c *ChannelService) UpdateChannelInfoById(channel *system.DeviceChannel) error {
+	err := channel.UpdateChannelInfoById()
+	return err
+}

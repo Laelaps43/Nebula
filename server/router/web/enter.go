@@ -5,6 +5,7 @@ type webRouter struct {
 	UserRouter
 	DeviceRouter
 	ZlmHookRouter
+	ChannelRouter
 }
 
 var WebRouterAll = new(webRouter)

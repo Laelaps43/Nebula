@@ -13,6 +13,7 @@ import (
 	"nebula.xyz/global"
 	"nebula.xyz/helper"
 	"nebula.xyz/model/system"
+	"nebula.xyz/utils"
 	"sync"
 )
 
@@ -83,11 +84,11 @@ func InitSipServer() {
 		global.MediaServer.SetSecret(global.CONFIG.Media.Secret)
 		global.DB.Create(&meidaTmp)
 	}
-	//_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
-	//if err != nil {
-	//	global.Logger.Error("初始化媒体服务器失败")
-	//return
-	//}
+	_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
+	if err != nil {
+		global.Logger.Error("初始化媒体服务器失败")
+		return
+	}
 	global.Logger.Info("初始化媒体服务器完成")
 	NewSipServer()
 }

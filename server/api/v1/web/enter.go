@@ -9,6 +9,7 @@ type WebApi struct {
 	VideoApi
 	DeviceApi
 	ZlmHookApi
+	ChannelApi
 }
 
 var (

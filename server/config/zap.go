@@ -19,7 +19,7 @@ type ZAP struct {
 	Format       string `mapstructure:"format" yaml:"format"`
 }
 
-// 根据指定的类型返回对应zapcore的等级
+// TransLevel 根据指定的类型返回对应zapcore的等级
 func (zap *ZAP) TransLevel() zapcore.Level {
 	zap.Level = strings.ToLower(zap.Level)
 	switch zap.Level {

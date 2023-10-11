@@ -12,23 +12,23 @@ type _zap struct{}
 
 var Zap = new(_zap)
 
-// 获取配置Zap的Core
+// GetZapCores 获取配置Zap的Core
 func (z *_zap) GetZapCores() []zapcore.Core {
 	cores := make([]zapcore.Core, 0, 4)
-	for levle := global.CONFIG.ZAP.TransLevel(); levle <= zapcore.ErrorLevel; levle++ {
-		cores = append(cores, z.GetEncoderCore(levle, z.GetLevelPriority(levle)))
+	for level := global.CONFIG.ZAP.TransLevel(); level <= zapcore.ErrorLevel; level++ {
+		cores = append(cores, z.GetEncoderCore(level, z.GetLevelPriority(level)))
 	}
 	return cores
 }
 
-// 获取指定Encoder的zapcore
-func (z *_zap) GetEncoderCore(levle zapcore.Level, levleFunc zap.LevelEnablerFunc) zapcore.Core {
-	writer := FileRotatelogs.GetWriterSyncer(levle.String())
+// GetEncoderCore 获取指定Encoder的zapcore
+func (z *_zap) GetEncoderCore(level zapcore.Level, levelFunc zap.LevelEnablerFunc) zapcore.Core {
+	writer := FileRotatelogs.GetWriterSyncer(level.String())
 
-	return zapcore.NewCore(z.GetEncoder(), writer, levle)
+	return zapcore.NewCore(z.GetEncoder(), writer, level)
 }
 
-// 返回指定的编码器
+// GetEncoder 返回指定的编码器
 func (z *_zap) GetEncoder() zapcore.Encoder {
 	if global.CONFIG.ZAP.Format == "json" {
 		return zapcore.NewJSONEncoder(z.GetEncoderConfig())
@@ -36,12 +36,12 @@ func (z *_zap) GetEncoder() zapcore.Encoder {
 	return zapcore.NewConsoleEncoder(z.GetEncoderConfig())
 }
 
-// 自定义日志时间输出格式
+// CustomTimeEncoder 自定义日志时间输出格式
 func (z *_zap) CustomTimeEncoder(t time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 	encoder.AppendString(t.Format("2006/01/02 - 15:04:05.000"))
 }
 
-// 自定义配置
+// GetEncoderConfig 自定义配置
 func (z *_zap) GetEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
 		MessageKey: "message",
@@ -58,7 +58,7 @@ func (z *_zap) GetEncoderConfig() zapcore.EncoderConfig {
 	}
 }
 
-// 日志级别
+// GetLevelPriority 日志级别
 func (z *_zap) GetLevelPriority(level zapcore.Level) zap.LevelEnablerFunc {
 	switch level {
 	case zapcore.DebugLevel:

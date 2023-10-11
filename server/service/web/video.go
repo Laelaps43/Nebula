@@ -45,3 +45,26 @@ func (v *VideoService) RecordVideo(device system.Device, channel system.DeviceCh
 	global.Logger.Error(httpRequest)
 	return nil
 }
+
+func (v *VideoService) StopPlay(stream *system.Stream) (err error) {
+	// 判断流是否在录像，如果在录像，只将流的URL删掉
+	record := &request.IsRecording{
+		// TODO 需要更改
+		Secret: global.MediaServer.GetSecret(),
+		Type:   "1",
+		Vhost:  "__defaultVhost__",
+		App:    "rtp",
+		Stream: utils.StreamToHex(stream.StreamId),
+	}
+	body, err := json.Marshal(record)
+	if err != nil {
+		global.Logger.Error("StopPlay 转换Json错误", zap.Error(err))
+		return err
+	}
+	httpRequest, err := utils.ZLMHttpRequest(helper.ZlmIsRecording, strings.NewReader(string(body)))
+	if err != nil {
+		global.Logger.Info("ZLM isRecording 请求错误", zap.Error(err))
+		return
+	}
+
+}

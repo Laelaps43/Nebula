@@ -12,6 +12,7 @@ func (z *ZlmHookRouter) InitZlmHookRouter(Router *gin.RouterGroup) (r gin.IRoute
 	hookApi := web.WebApiAll.ZlmHookApi
 	{
 		hookRouter.POST("on_server_keepalive", hookApi.OnServerKeepalive)
+		hookRouter.POST("on_publish", hookApi.OnPublish)
 	}
 	return
 }

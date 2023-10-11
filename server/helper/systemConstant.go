@@ -43,6 +43,7 @@ const (
 const (
 	ZlmGetApiList  = "getApiList"
 	ZlmStartRecord = "startRecord"
+	ZlmIsRecording = "isRecording"
 )
 
 type QueryType string
