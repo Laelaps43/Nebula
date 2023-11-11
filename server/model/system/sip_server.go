@@ -24,6 +24,10 @@ type SipServer struct {
 	Sort          uint   `gorm:"comment:排序"`
 }
 
+func (s *SipServer) TableName() string {
+	return "sip_server"
+}
+
 // GetSipServerById 根据sip_id 获取sipServer
 func (s *SipServer) GetSipServerById() (err error) {
 	if err = global.DB.Model(&SipServer{}).Where("sip_id = ?", s.SipId).First(&s).Error; err != nil {

@@ -24,6 +24,7 @@ export const WhiteList = ['/v1/user/login', '/v1/user/permission', '/v1/account/
 
 type IAuth = { auth?: string[]; role?: number };
 
+// 这里过滤路由，后端会返回一个module 对应的是 路由配置中的meta中的Auth
 export const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]): RouteRecordRaw[] => {
   const res: RouteRecordRaw[] = [];
   routes.forEach((route) => {

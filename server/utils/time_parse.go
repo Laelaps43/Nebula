@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// 将传递过来的时间转换成Duration
+// ParseExpireTime 将传递过来的时间转换成Duration
 func ParseExpireTime(d string) (time.Duration, error) {
 	d = strings.TrimSpace(d)
 	dr, err := time.ParseDuration(d)

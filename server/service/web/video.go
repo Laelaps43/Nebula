@@ -66,5 +66,6 @@ func (v *VideoService) StopPlay(stream *system.Stream) (err error) {
 		global.Logger.Info("ZLM isRecording 请求错误", zap.Error(err))
 		return
 	}
-
+	global.Logger.Info("StopPlay获取ZLMediaKit回应", zap.String("response", httpRequest))
+	return err
 }

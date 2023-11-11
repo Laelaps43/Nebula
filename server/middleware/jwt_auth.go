@@ -54,7 +54,7 @@ func JWTAuth() gin.HandlerFunc {
 			ctx.Header("new-expire-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
 			// 将新Token保存到Cache中，替换以来的Token
 
-			if _, err := jwtService.SetJWT(token, strconv.Itoa(claims.ID), dr); err != nil {
+			if _, err := jwtService.SetJWT(token, strconv.Itoa(int(claims.ID)), dr); err != nil {
 				global.Logger.Error("保存Token失败！", zap.Error(err))
 				model.ErrorWithMessage("登录失败，请稍候再试！", ctx)
 				return

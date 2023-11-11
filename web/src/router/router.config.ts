@@ -111,16 +111,16 @@ const constantRoutes: RouteRecordRaw[] = [
 ];
 
 export const publicRoutes = [
-  {
-    path: '/redirect',
-    component: BlankLayout,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('/@/views/redirect/index'),
-      },
-    ],
-  },
+  // {
+  //   path: '/redirect',
+  //   component: BlankLayout,
+  //   children: [
+  //     {
+  //       path: '/redirect/:path(.*)',
+  //       component: () => import('/@/views/redirect/index'),
+  //     },
+  //   ],
+  // },
   {
     path: '/:pathMatch(.*)',
     redirect: '/404',

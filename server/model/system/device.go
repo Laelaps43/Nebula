@@ -29,12 +29,12 @@ type Device struct {
 }
 
 func (d *Device) TableName() string {
-	return "device"
+	return "sys_device"
 }
 
 // DeviceById 根据Id查询设备信息
 func (d *Device) DeviceById() error {
-	if err := global.DB.Where("device_id = ?", d.DeviceId).First(&d).Error; err != nil {
+	if err := global.DB.First(&d).Error; err != nil {
 		return err
 	}
 	return nil

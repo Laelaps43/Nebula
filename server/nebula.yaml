@@ -18,7 +18,7 @@ sip:
   channel-prefix: "37070000081318"       # 通道前缀
 
 media:
-  address: "192.168.2.194"
+  address: "192.168.2.214"
   rtp: "10000"  # media 接收GB28181RTP流端口
   restful: 8080  # media 服务器restfulapi地址
   secret: "admin@nebula.com" # zlm secret key 用来请求zlm接口验证

@@ -31,12 +31,20 @@ func Gorm() *gorm.DB {
 func RegisterTables() {
 	db := global.DB
 	global.Logger.Info("初始化数据库表中...")
-	db.AutoMigrate(
+	err := db.AutoMigrate(
+		system.SysApi{},
+		system.SysRole{},
+		system.SysUser{},
+		system.SysMenu{},
+		system.SysButton{},
 		system.Device{},
 		system.DeviceChannel{},
 		system.MediaServer{},
 		system.SipServer{},
 		system.Stream{},
-		system.User{},
 	)
+	if err != nil {
+		global.Logger.Error("初始化表失败")
+		return
+	}
 }

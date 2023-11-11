@@ -81,7 +81,6 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 		global.Logger.Error("获取Expires失败")
 		return
 	}
-
 	idx := strings.Index(req.Source(), ":")
 	fromIp := req.Source()[:idx]
 	fromPort := req.Source()[idx+1:]

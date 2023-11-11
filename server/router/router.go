@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"nebula.xyz/global"
+	"nebula.xyz/middleware"
 	"nebula.xyz/router/web"
 )
 
@@ -16,6 +17,7 @@ func Routers() *gin.Engine {
 
 	// 基本路由，不用被鉴权
 	PublicGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
+	PublicGroup.Use(middleware.CasbinHandler())
 	{
 		webRouter.InitHelloRouter(PublicGroup)
 		webRouter.InitUserRouter(PublicGroup)

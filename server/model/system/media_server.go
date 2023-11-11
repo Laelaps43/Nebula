@@ -19,6 +19,10 @@ type MediaServer struct {
 	Sort       int        `gorm:"comment:媒体服务器排序"`
 }
 
+func (m *MediaServer) TableName() string {
+	return "media_server"
+}
+
 func (m *MediaServer) GetAddress() string {
 	return m.Address
 }

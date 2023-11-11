@@ -27,6 +27,10 @@ type Stream struct {
 	Start, End time.Time `gorm:"-"`
 }
 
+func (s *Stream) TableName() string {
+	return "stream"
+}
+
 // GetStreamById 根据Stream Id 查找Stream
 func (s *Stream) GetStreamById() error {
 	if err := global.DB.Where("stream_id = ?", s.StreamId).First(&s).Error; err != nil {

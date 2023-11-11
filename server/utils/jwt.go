@@ -29,7 +29,7 @@ func NewJWT() *JWT {
 }
 
 // CreateClaims 自定义声明，将被载入到载荷中
-func (j *JWT) CreateClaims(user *system.User, expire time.Time) jwt.CustomClaims {
+func (j *JWT) CreateClaims(user *system.SysUser, expire time.Time) jwt.CustomClaims {
 	return jwt.CustomClaims{
 		ID:       user.ID,
 		UserName: user.UserName,
