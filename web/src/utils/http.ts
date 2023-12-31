@@ -50,8 +50,8 @@ instance.interceptors.response.use(
   (response) => {
     const res = response.data as ResData<any>;
     // 正确状态
-    if (res.code === 0) {
-      return res.result || true;
+    if (res.code === 1) {
+      return res.data || true;
     }
 
     // 登录失效

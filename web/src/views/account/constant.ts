@@ -7,12 +7,12 @@ export const KeyValue = [
   },
   {
     label: '用户角色 :',
-    key: 'role_name',
+    key: 'role',
     value: '',
   },
   {
-    label: '手机号 :',
-    key: 'mobile',
+    label: '邮箱 :',
+    key: 'email',
     value: '',
   },
   {

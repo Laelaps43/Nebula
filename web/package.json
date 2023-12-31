@@ -24,8 +24,9 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "check": "vue-tsc --noEmit",
-    "serve": "npm run dev",
+    "serve": "yarn run dev",
     "dev": "vite",
+    "dev:network": "vite --host 0.0.0.0",
     "dev:development": "vite --mode development",
     "build:production": "vue-tsc --noEmit && vite build --mode production",
     "build": "vite build",
@@ -37,20 +38,20 @@
     "clean:lib": "rimraf node_modules",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock}/**/*.{vue,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
-    "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && npx prettier CHANGELOG.md --write && git add CHANGELOG.md",
-    "prepare": "husky install"
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && npx prettier CHANGELOG.md --write && git add CHANGELOG.md"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^6.0.1",
+    "@ant-design/icons-vue": "^7.0.1",
+    "@videojs-player/vue": "^1.0.0",
     "@vueuse/core": "^6.9.2",
-    "ant-design-vue": "^3.2.7",
+    "ant-design-vue": "3.2.20",
     "axios": "^0.24.0",
     "dayjs": "^1.11.3",
     "echarts": "^5.2.2",
     "lodash-es": "^4.17.21",
     "pinia": "^2.0.4",
     "sanitize.css": "^13.0.0",
+    "video.js": "^8.6.1",
     "vue": "^3.2.23",
     "vue-request": "^1.2.3",
     "vue-router": "^4.0.12"

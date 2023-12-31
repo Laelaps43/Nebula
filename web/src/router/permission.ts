@@ -26,6 +26,7 @@ router.beforeEach(async (to: any, _, next) => {
         await permissioStore.fetchAuths();
         // 过滤权限路由
         const routes = await permissioStore.buildRoutesAction();
+        console.log(routes);
         // 404 路由一定要放在 权限路由后面
         routes.forEach((route) => {
           router.addRoute(route);

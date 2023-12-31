@@ -10,15 +10,15 @@ import { usePermissioStore } from '/@/store/modules/permission';
 export function usePermission() {
   const permissioStore = usePermissioStore();
 
-  function hasPermission(value?: string | string[], def = true): boolean {
+  function hasPermission(value?: string | string[], def = false): boolean {
     // Visible by default
     if (!value) {
       return def;
     }
 
-    if (permissioStore.getIsAdmin === 1) {
-      return true;
-    }
+    // if (permissioStore.getIsAdmin === 1) {
+    //   return true;
+    // }
 
     if (!isArray(value)) {
       return permissioStore.getAuths?.includes(value);

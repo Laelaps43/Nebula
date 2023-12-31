@@ -1,6 +1,6 @@
 <template>
-  <div class="tradingHistory">
-    <div class="tradingHistory_header">
+  <div class="networkHistory">
+    <div class="networkHistory_header">
       <h2 class="font18">网络状态</h2>
       <p class="rowBC" style="justify-content: left">
         <span style="width: 30%">下载：{{ '1.04Mpbs' }}</span>
@@ -12,7 +12,7 @@
       :bordered="false"
       :loading="loading"
       :body-style="{ padding: 0 }"
-      class="tradingHistory_chart"
+      class="networkHistory_chart"
     >
       <div class="chart-box" ref="chartRef"></div>
     </a-card>
@@ -94,7 +94,7 @@
   );
 </script>
 <style lang="less" scoped>
-  .tradingHistory {
+  .networkHistory {
     background: #ffffff;
     &_chart {
       .chart-box {

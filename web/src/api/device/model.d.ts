@@ -4,6 +4,17 @@ export interface ReqParams {
   deviceId: string;
 }
 
+export interface CreateDeviceParams {
+  name: string;
+  deviceId: string;
+  port: number;
+}
+
+export interface UpdateParams {
+  name: string;
+  deviceId: string;
+}
+
 export interface ResResult {
   list: {
     deviceId: number;

@@ -13,7 +13,7 @@
       </template>
       <Space class="wrap" align="baseline" direction="horizontal">
         <Icon align="2px" type="xitongshezhi" />
-        <span class="setting">系统设置</span>
+        <span class="setting">我的</span>
         <Icon align="2px" type="xialajiantou" />
       </Space>
     </a-dropdown>
@@ -61,6 +61,7 @@
     justify-content: center;
     padding-right: 16px;
     .wrap {
+      display: flex;
       height: 55px;
 
       .setting {

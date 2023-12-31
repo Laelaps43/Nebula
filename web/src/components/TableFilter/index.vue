@@ -1,5 +1,9 @@
 <template>
-  <a-card v-if="!hasHidden" :body-style="{ padding: '0 0 24px 0' }" :bordered="false">
+  <a-card
+    v-if="!hasHidden"
+    :body-style="{ padding: '0 0 24px 0' }"
+    :bordered="false"
+  >
     <a-form class="form-container" layout="horizontal" :model="formModel">
       <a-row type="flex">
         <a-col v-if="button" flex="100px">
@@ -91,7 +95,7 @@
         const plainObj = toRaw(props.button) || {};
         return {
           ...plainObj,
-          permission: hasPermission(plainObj.auth) && hasRole(plainObj.role),
+          permission: hasPermission(plainObj.auth),
         };
       });
 

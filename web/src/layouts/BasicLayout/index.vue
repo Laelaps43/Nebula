@@ -12,7 +12,6 @@
           <!-- divider -->
           <!-- <a-divider v-if="routeMeta.breadcrumb" class="line" /> -->
           <!-- router-view -->
-          <!-- 这个出口不知道干啥 -->
           <template v-if="routeMeta.hiddenWrap">
             <!-- <router-view /> -->
             <router-view v-slot="{ Component, route }">
@@ -57,7 +56,11 @@
     menuData,
   });
 
-  const routeMeta = computed(() => router.currentRoute.value.meta);
+  const routeMeta = computed(() => {
+    var data = router.currentRoute.value.meta;
+    console.log(data);
+    return data;
+  });
 
   const breadcrumb = computed(
     () =>
@@ -79,6 +82,7 @@
   .basicLayout-wrap {
     height: 100vh;
     overflow: hidden;
+
     .basicLayout-content {
       height: calc(100vh - 80px);
       overflow-y: auto;

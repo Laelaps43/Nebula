@@ -12,6 +12,7 @@ import {
   DatePicker,
   Divider,
   Dropdown,
+  Drawer,
   Form,
   Input,
   Layout,
@@ -21,23 +22,23 @@ import {
   Select,
   Space,
   Spin,
-  Table as AntdTable,
+  Table as AntdTable
 } from 'ant-design-vue';
 
-import type { App } from 'vue';
+import type { App } from "vue";
 
-import Icon from '/@/components/Icon/index.vue';
-import Modal from '/@/components/Modal/index.vue';
-import Table from '/@/components/Table/index.vue';
-import TableFilter from '/@/components/TableFilter/index.vue';
-import Upload from '/@/components/Upload/index.vue';
+import Icon from "/@/components/Icon/index.vue";
+import Modal from "/@/components/Modal/index.vue";
+import Table from "/@/components/Table/index.vue";
+import TableFilter from "/@/components/TableFilter/index.vue";
+import Upload from "/@/components/Upload/index.vue";
 
 export function setupComponents(app: App<Element>) {
-  app.component('Icon', Icon);
-  app.component('Modal', Modal);
-  app.component('Table', Table);
-  app.component('TableFilter', TableFilter);
-  app.component('Upload', Upload);
+  app.component("Icon", Icon);
+  app.component("Modal", Modal);
+  app.component("Table", Table);
+  app.component("TableFilter", TableFilter);
+  app.component("Upload", Upload);
 
   app
     .use(Alert)
@@ -48,6 +49,7 @@ export function setupComponents(app: App<Element>) {
     .use(Col)
     .use(DatePicker)
     .use(Divider)
+    .use(Drawer)
     .use(Dropdown)
     .use(Form)
     .use(Input)

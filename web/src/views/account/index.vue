@@ -1,5 +1,10 @@
 <template>
   <a-spin :spinning="loading">
+    <h2 class="font18 marT13 rowSC link" @click="handleGoBack">
+      <LeftOutlined />
+      <span class="marL10">{{ '返回' }}</span>
+    </h2>
+    <a-divider />
     <div class="title font18">用户信息</div>
     <div class="content">
       <div class="content_left">
@@ -14,6 +19,7 @@
               <div v-if="modifyItem.key === item.key">
                 <a-input v-model:value="modifyItem.value" />
               </div>
+              <div v-else-if="item.key == 'role'">{{ item.value.name }}</div>
               <div v-else>{{ item.value }}</div>
             </a-space>
           </a-col>
@@ -23,7 +29,7 @@
               <a @click="handleCancle">取消</a>
             </a-space>
             <div v-else>
-              <a-button v-if="item.isEdit" type="link" @click="handleClick(item)"> 修改 </a-button>
+              <a-button v-if="item.isEdit" type="link" @click="handleClick(item)"> 修改</a-button>
             </div>
           </a-col>
         </a-row>
@@ -36,10 +42,16 @@
   import { KeyValue } from './constant';
   import { useSysAccountStore } from '/@/store/modules/sysAccount';
   import { useMessage } from '/@/hooks/useMessage';
+  import { LeftOutlined } from '@ant-design/icons-vue';
 
   const { createMessage } = useMessage();
   const store = useSysAccountStore();
 
+  const router = useRouter();
+
+  const handleGoBack = () => {
+    router.back();
+  };
   const initVal = {
     key: '',
     value: '',
@@ -75,12 +87,15 @@
 
   const handleSubmit = async () => {
     const { key, value } = unref(modifyItem);
-    // const params = { id: account.value!.user_id, [key]: value };
+    const params = { id: account.value!.id, [key]: value };
     //
-    console.log('当前修改内容', { [key]: value });
     loading.value = true;
-    // await store.fetchAccountUpdate(params);
-    createMessage.success(`当前修改内容为：{ ${key}: ${value} }`);
+    let res = await store.fetchAccountUpdate(params);
+    if (res) {
+      createMessage.success(`修改成功`);
+    } else {
+      createMessage.error(`修改失败`);
+    }
     loading.value = false;
     handleCancle();
   };
@@ -92,8 +107,10 @@
     line-height: 105px;
     padding-left: 29px;
   }
+
   .content {
     display: flex;
+
     &_left {
       padding-left: 15px;
       margin-right: 24px;
@@ -107,18 +124,22 @@
       //   }
       // }
     }
+
     &_right {
       flex: 1;
       padding-bottom: 44px;
+
       .row {
         height: 53px;
         padding-left: 24px;
         line-height: 53px;
         font-size: 14px;
         color: #333333;
+
         .label-w {
           width: 80px;
         }
+
         &:nth-child(odd) {
           background-color: #fafafa;
         }

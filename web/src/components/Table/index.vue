@@ -15,19 +15,20 @@
       :rowClassName="(_, index) => (index % 2 === 1 ? 'table-striped' : '')"
       :dataSource="dataSource"
       :columns="columns"
-      :rowKey="(record) => record.id"
+      :rowKey="(record) => record.key || record.id"
       :pagination="pagination"
       :loading="loading"
       @change="handleTableChange"
       :scroll="scroll"
     >
-      <!-- slot 写法自定义 操作列 -->
-      <!-- <template #[item]="data" v-for="item in Object.keys($slots)" :key="item">
-        <slot :name="item" v-bind="data || {}"></slot>
-      </template> -->
-      <template #bodyCell="{ column, text, index, record }">
-        <template v-if="column.key === 'toIndex'">
-          <span>{{ index + 1 }}</span>
+      <template #bodyCell="{ column, text, record }">
+        <template v-if="column.key === 'status'">
+          <a-tag :bordered="false" :color="getStatusColor(record.status || record.enable)"
+            >{{ getStatusLabel(record.status || record.enable) }}
+          </a-tag>
+        </template>
+        <template v-if="column.key === 'role'">
+          <cascader :role-list="roleList" :user-role="getUserRole(record)" />
         </template>
         <template v-if="column.key === 'toDate'">
           <span>{{ text ? formatDate(text) : '-' }}</span>
@@ -40,18 +41,19 @@
           <template v-for="(action, index) in getActions" :key="`${index}-${action.label}`">
             <!-- 气泡确认框 -->
             <a-popconfirm
-              v-if="action.enable"
+              v-if="action.enable && action.permission"
               :title="action?.title"
               @confirm="action?.onConfirm(record)"
               @cancel="action?.onCancel(record)"
             >
               <a @click.prevent="() => {}" :type="action.type">{{ action.label }}</a>
             </a-popconfirm>
-            <span v-else-if="!action.permission">——</span>
-            <!-- 按钮 -->
-            <a v-else @click="action?.onClick(record)" :type="action.type">{{ action.label }}</a>
-            <!-- 分割线 -->
-            <a-divider type="vertical" v-if="index < getActions.length - 1" />
+            <span v-else-if="action.permission">
+              <!-- 按钮 -->
+              <a @click="action?.onClick(record)" :type="action.type">{{ action.label }}</a>
+              <!-- 分割线 -->
+              <a-divider type="vertical" v-if="index < getActions.length - 1" />
+            </span>
           </template>
         </template>
       </template>
@@ -59,15 +61,12 @@
   </div>
 </template>
 <script lang="ts">
-  import { FilterValue } from 'ant-design-vue/es/table/interface';
   import dayjs from 'dayjs';
-  import { usePagination } from 'vue-request';
   import { formatToDate, formatToDateTime } from '/@/utils/dateUtil';
   import { usePermission } from '/@/hooks/usePermission';
-  import { useRole } from '/@/hooks/useRole';
-  import { TablePaginationConfig } from 'ant-design-vue/lib/table/interface';
-
-  // const req = () => new Promise((resolve) => resolve({ total: 0, list: [] }));
+  import { TablePaginationConfig } from 'ant-design-vue';
+  import type { CascaderProps } from 'ant-design-vue';
+  import { FilterValue } from 'ant-design-vue/es/table/interface';
 
   export default defineComponent({
     props: [
@@ -81,33 +80,56 @@
       'model' /* Filter筛选列组件：form model */,
       'resKey',
       'scroll',
+      'statusList',
+      'pageParam',
+      'roleList',
     ],
-    // emits: ['onSearch'],
+
     setup(props) {
       const { hasPermission } = usePermission();
-      const { hasRole } = useRole();
-      // const router = useRouter();
-      const {
-        data: dataSource,
-        run,
-        loading,
-        current,
-        pageSize,
-        total,
-        refresh,
-      } = usePagination(props.url, {
-        // formatResult: (res: any) => (props.resKey ? res[props.resKey.list] : res.list),
-        pagination: {
-          pageSizeKey: 'limit',
-          currentKey: 'page',
+
+      const options: CascaderProps['options'] = [
+        {
+          label: 'Light',
+          value: 'light',
+          children: new Array(20)
+            .fill(null)
+            .map((_, index) => ({ label: `Number ${index}`, value: index })),
         },
-      });
+        {
+          label: 'Bamboo',
+          value: 'bamboo',
+          children: [
+            {
+              label: 'Little',
+              value: 'little',
+              children: [
+                {
+                  label: 'Toy Fish',
+                  value: 'fish',
+                },
+                {
+                  label: 'Toy Cards',
+                  value: 'cards',
+                },
+                {
+                  label: 'Toy Bird',
+                  value: 'bird',
+                },
+              ],
+            },
+          ],
+        },
+      ];
 
+      const valueT = ref<string[]>([]);
+      const dataSource = ref([]);
+      const loading = ref(false);
+      const current = ref(1);
+      const pageSize = ref(10);
+      const total = ref(0);
       const hasBordered = computed(() => props.bordered ?? true);
-
-      const listData = computed(
-        () => (dataSource.value as unknown as Indexable)?.[props?.resKey?.list || 'list'] || [],
-      );
+      const roleList = props.roleList;
 
       const pagination = computed(() => ({
         total: total.value,
@@ -118,20 +140,32 @@
         showTotal: () => h('span', {}, `共 ${total.value} 条`),
       }));
 
+      onMounted(() => {
+        initTableData();
+      });
+
       const handleTableChange = (
         pag: TablePaginationConfig,
         filters: Record<string, FilterValue | null>,
         sorter: any,
       ) => {
-        run({
-          limit: pag!.pageSize!,
-          page: pag?.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters,
-        });
+        pageSize.value = pag.pageSize;
       };
-
+      const initTableData = () => {
+        props
+          .url({
+            limit: pageSize.value,
+            page: current.value,
+            ...props.pageParam,
+          })
+          .then((res: any) => {
+            dataSource.value = res.list;
+            total.value = res.total;
+          });
+      };
+      const refresh = () => {
+        initTableData();
+      };
       // action 操作列
       const getActions = computed(() => {
         return (
@@ -144,7 +178,7 @@
                 ...action,
                 ...(popConfirm || {}),
                 enable: !!popConfirm,
-                permission: hasPermission(action.auth) && hasRole(action.role),
+                permission: hasPermission(action.auth),
               };
             })
         );
@@ -154,6 +188,7 @@
       const tableFilterModel = computed(() => props.model);
       const tableFilterButton = computed(() => props.button);
       const tableFilterItems = computed(() => props.items);
+      // const hiddenFilter = computed(() => props.hiddenFilter);
       const onSearch = () => {
         const args = toRaw(tableFilterModel.value) || {};
 
@@ -165,8 +200,6 @@
             }
           });
         }
-
-        run({ page: current.value, limit: pageSize.value, ...args });
       };
 
       // 日期格式化
@@ -175,21 +208,39 @@
         return val.length === 10 ? formatFn(Number(val) * 1000) : formatFn(val);
       };
 
+      const getStatusLabel = computed(() => {
+        return (status: any) => {
+          return (props.statusList as []).find((item) => item?.status == status)?.label || '-';
+        };
+      });
+      const getStatusColor = computed(() => {
+        return (status: any) => {
+          return (props.statusList as []).find((item) => item?.status == status)?.color || '-';
+        };
+      });
+
+      const getUserRole = computed(() => (user) => {
+        return user.roles?.map((role) => [role?.id]).filter(Boolean) || [];
+      });
       return {
-        dataSource: listData,
+        dataSource,
         loading,
         pagination,
         hasBordered,
         handleTableChange,
-        run,
+        // run,
         refresh,
+        valueT,
+        options,
         getActions,
-        // filter
         tableFilterModel,
         tableFilterButton,
         tableFilterItems,
         onSearch,
         formatDate,
+        getStatusLabel,
+        getStatusColor,
+        getUserRole,
       };
     },
   });
@@ -198,10 +249,12 @@
   .ant-table-striped :deep(.table-striped) td {
     background-color: #fafafa;
   }
+
   .ant-table-striped :deep(.ant-table-pagination.ant-pagination) {
     margin: 30px auto;
     width: 100%;
     text-align: center;
+
     .ant-pagination-prev,
     .ant-pagination-next {
       .anticon {
@@ -209,12 +262,15 @@
       }
     }
   }
+
   .ant-table-striped :deep(.ant-pagination-item-active) {
     background: #3860f4;
+
     a {
       color: #ffffff;
     }
   }
+
   .border {
     border: 0.5px solid rgba(210, 210, 210, 0.5);
   }

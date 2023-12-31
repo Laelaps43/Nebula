@@ -4,7 +4,6 @@
       <router-link :to="{ path: '/' }">
         <img :src="logo" class="logo" />
         <h1 class="title"> {{ APP_TITLE }} </h1>
-        <!-- <span class="subTitle">基础版</span> -->
       </router-link>
     </div>
     <div>

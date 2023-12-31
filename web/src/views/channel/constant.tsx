@@ -1,4 +1,3 @@
-// import { Tag } from 'ant-design-vue';
 import { ColumnProps } from 'ant-design-vue/es/table';
 
 export const columns: ColumnProps[] = [
@@ -8,25 +7,20 @@ export const columns: ColumnProps[] = [
     width: 80,
   },
   {
-    title: '设备编号',
-    dataIndex: 'deviceId',
+    title: '通道编号',
+    dataIndex: 'channelId',
     width: 200,
     // customRender: ({ text }) => <Tag>{text}</Tag>,
   },
   {
     title: '地址',
-    dataIndex: 'realm',
+    dataIndex: 'address',
     width: 100,
   },
   {
     title: '厂家',
     dataIndex: 'manufacturer',
     width: 80,
-  },
-  {
-    title: '通道',
-    dataIndex: 'channelCount',
-    width: 50,
   },
   {
     title: '状态',
@@ -38,23 +32,6 @@ export const columns: ColumnProps[] = [
     title: '传输模式',
     dataIndex: 'transport',
     width: 50,
-    // customRender: ({ text }) => (
-    //   <a href={text} target="_blank">
-    //     {text}
-    //   </a>
-    // ),
-  },
-  {
-    title: '最近心跳时间',
-    dataIndex: 'keepLiveAt',
-    key: 'toDateTime',
-    width: 120,
-  },
-  {
-    title: '最近注册时间',
-    dataIndex: 'registerAt',
-    key: 'toDateTime',
-    width: 120,
   },
   {
     title: '操作',
@@ -64,14 +41,14 @@ export const columns: ColumnProps[] = [
   },
 ];
 
-export const DeviceStatusList = [
+export const ChannelStatusList = [
   {
-    status: '0',
+    status: 'OFF',
     label: '离线',
     color: 'error',
   },
   {
-    status: '1',
+    status: 'ON',
     label: '在线',
     color: 'success',
   },

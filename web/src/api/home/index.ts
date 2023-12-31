@@ -1,13 +1,13 @@
-import { ReqParams, ResInfoList, ResResult } from './model';
 import { get } from '/@/utils/http';
+import { OverViewResult, SystemInfoResult } from '/@/api/home/model';
 
 enum URL {
-  list = '/v1/home/list',
-  info = '/v1/home/info',
+  overView = '/v1/home/overview',
+  systemInfo = '/v1/system/info',
 }
 
-const list = async (data: ReqParams) => get<ResResult>({ url: URL.list, data });
+const overView = async () => get<OverViewResult>({ url: URL.overView });
 
-const info = async () => get<ResInfoList>({ url: URL.info });
+const systemInfo = async () => get<SystemInfoResult>({ url: URL.systemInfo });
 
-export default { list, info };
+export default { overView, systemInfo };

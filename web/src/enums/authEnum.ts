@@ -6,22 +6,24 @@
 
 export enum AuthEnum {
   /**
-   * 用户
+   * 设备列表
    */
-  // 新增用户
-  user_create = '/v1/user/create',
-  // 编辑用户
-  user_update = '/v1/user/update',
-  // 删除用户
-  user_delete = '/v1/user/delete',
+  // 编辑设备
+  device_update = 'device:update',
+  // 删除设备
+  device_delete = 'device:delete',
+  // 通道展示
+  channel_show = 'device:showChannel',
+  // 增添设备
+  device_create = 'device:create',
 
   /**
-   * 角色
+   * 通道列表
    */
-  // 新增角色
-  role_create = '/v1/role/create',
-  // 修改角色
-  role_update = '/v1/role/update',
-  // 删除角色
-  role_delete = '/v1/role/delete',
+  channel_create = 'channel:create',
+
+  /**
+   * 角色管理
+   */
+  role_create = 'role:create',
 }

@@ -69,7 +69,9 @@ export const usePermissioStore = defineStore({
       const res = await fetchApi.permission();
       if (res) {
         this.setAuth(res.auths, res.modules);
-        this.setIsAdmin(res.is_admin || 0);
+        // this.setIsAdmin(res.is_admin || 0);
+        // TODO 系统没有实现是否管理员登入
+        this.setIsAdmin(1);
       }
       return res;
     },
@@ -81,6 +83,7 @@ export const usePermissioStore = defineStore({
     async buildRoutesAction(): Promise<RouteRecordRaw[]> {
       // 404 路由一定要放在 权限路由后面
       let routes: RouteRecordRaw[] = [...constantRoutes, ...accessRoutes, ...publicRoutes];
+      console.log(routes);
 
       if (this.getIsAdmin !== 1) {
         // 普通用户

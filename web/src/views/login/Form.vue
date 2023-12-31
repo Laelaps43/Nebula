@@ -2,10 +2,10 @@
   <div class="form_box">
     <a-form :model="formModel" :rules="rules" @finish="handleFinish">
       <p class="text">请输入帐号</p>
-      <a-form-item name="username">
+      <a-form-item name="email">
         <a-input
           class="reset-input"
-          v-model:value="formModel.username"
+          v-model:value="formModel.email"
           placeholder="管理员：admin，普通：test"
         >
           <template #prefix>
@@ -35,7 +35,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useUserStore } from '/@/store/modules/user';
+  import { useUserStore } from '/@/store/modules/user';
 
   const userStore = useUserStore();
   const router = useRouter();
@@ -71,17 +71,16 @@ import { useUserStore } from '/@/store/modules/user';
   );
 
   const rules = {
-    username: [{ required: true, trigger: 'blur', message: '请输入手机号' }],
+    email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
     password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
   };
 
   const formModel = reactive({
-    username: '',
+    email: '',
     password: '',
   });
 
   const handleFinish = async (values) => {
-    console.log(values);
     loading.value = true;
     const res = await userStore.login(values);
     loading.value = false;

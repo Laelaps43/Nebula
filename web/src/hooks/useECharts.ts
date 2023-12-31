@@ -6,11 +6,13 @@ import { unref, nextTick, computed, ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useEventListener } from '/@/hooks/useEventListener';
 import echarts from '/@/utils/echarts';
+import { LegendComponent, TitleComponent } from 'echarts/components';
 
 export function useECharts(
   elRef: Ref<HTMLDivElement>,
   theme: 'light' | 'dark' | 'default' = 'default',
 ) {
+  echarts.use([LegendComponent, TitleComponent]);
   const getDarkMode = computed(() => {
     return theme;
   });
