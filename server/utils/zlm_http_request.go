@@ -22,7 +22,13 @@ func ZLMHttpRequest(path string, body io.Reader) (string, error) {
 		global.Logger.Error("向Zlm发送请求失败", zap.String("path", path))
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			global.Logger.Error("关闭连接失败", zap.Error(err))
+		}
+	}(resp.Body)
+
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		global.Logger.Error("读取Zlm返回失败", zap.Error(err))

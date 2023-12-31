@@ -1,7 +1,8 @@
 package service
 
-type SysService struct {
+type sysService struct {
+	ZLMService
 	CasbinService
 }
 
-var SysServiceAll = new(SysService)
+var SysServiceAll = new(sysService)

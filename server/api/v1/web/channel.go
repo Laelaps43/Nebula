@@ -8,21 +8,29 @@ import (
 	"nebula.xyz/model/request"
 	resp "nebula.xyz/model/response"
 	"nebula.xyz/model/system"
-	"strconv"
 )
 
 type ChannelApi struct{}
 
 // GetAllChannels 获取所有通道
 func (c *ChannelApi) GetAllChannels(ctx *gin.Context) {
-	var channel *system.DeviceChannel
-	channels, err := channel.GetAllChannels()
+	var pagination request.Pagination
+
+	err := ctx.ShouldBindJSON(&pagination)
 	if err != nil {
-		global.Logger.Error("查询通道失败", zap.Error(err))
-		model.ErrorWithMessage("查询全部通道失败", ctx)
+		model.ErrorWithMessage("请检查分页数据", ctx)
 		return
 	}
-	model.OkWithDetailed(channels, "查询成功", ctx)
+	channelPagination, total, err := channelService.GetChannelPagination(pagination)
+	if err != nil {
+		global.Logger.Error("查询设备信息失败")
+		model.ErrorWithMessage("获取失败", ctx)
+		return
+	}
+	model.OkWithDetailed(resp.PaginationResult{
+		List:  channelPagination,
+		Total: total,
+	}, "获取成功", ctx)
 }
 
 // GetChannelInfoById 根据通道Id获取通道信息
@@ -66,33 +74,66 @@ func (c *ChannelApi) UpdateChannelInfo(ctx *gin.Context) {
 
 // GenerateChannel 生成通道
 func (c *ChannelApi) GenerateChannel(ctx *gin.Context) {
-	var gen *request.ChannelGenerate
-
-	err := ctx.ShouldBindJSON(&gen)
+	channel, err := channelService.GenerateChannel()
 	if err != nil {
-		model.ErrorWithMessage("绑定数据错误", ctx)
+		model.ErrorWithMessage("生成设备失败", ctx)
 		return
 	}
-	if len(gen.DeviceId) != 20 {
-		model.ErrorWithMessage("数据错误", ctx)
-		return
-	}
-	num, _ := strconv.Atoi(gen.ChannelNum)
-	if num <= 0 {
-		return
-	}
-	device, err := deviceService.GetDeviceInfoById(gen.DeviceId)
-	if err != nil {
-		global.Logger.Error("设备不存在", zap.Error(err))
-		model.ErrorWithMessage("设备不存在", ctx)
-		return
-	}
-	channels, err := channelService.GenerateChannel(num, device)
+	model.OkWithDetailed(channel.ChannelId, "生成设备成功", ctx)
+	return
+}
 
-	channel := resp.GenerateInfo{
-		Device:     device,
-		Channels:   channels,
-		ChannelSum: len(channels),
+func (c *ChannelApi) CreateChannel(ctx *gin.Context) {
+
+	var createChannel request.CreateChannel
+
+	err := ctx.ShouldBindJSON(&createChannel)
+	if err != nil {
+		model.ErrorWithMessage("服务器内部异常", ctx)
+		ctx.Abort()
 	}
-	model.OkWithDetailed(channel, "生成通道成功", ctx)
+
+	err = channelService.CreateChannel(createChannel)
+	if err != nil {
+		global.Logger.Error("创建通道失败", zap.Error(err))
+		model.ErrorWithMessage("创建通道失败", ctx)
+		ctx.Abort()
+	}
+	model.OKWithMessage("创建通道成功", ctx)
+}
+
+func (c *ChannelApi) UpdateChannel(ctx *gin.Context) {
+
+	var channel system.DeviceChannel
+	err := ctx.ShouldBindJSON(&channel)
+	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
+		return
+	}
+	if len(channel.ChannelId) != 20 || len(channel.Name) == 0 {
+		model.ErrorWithMessage("参数错误", ctx)
+	}
+
+	err = channelService.UpdateChannelInfoById(&channel)
+	if err != nil {
+		model.ErrorWithMessage("更新错误", ctx)
+		return
+	}
+	model.OKWithMessage("更新成功", ctx)
+}
+
+func (c *ChannelApi) DeleteChannel(ctx *gin.Context) {
+	channelId := ctx.Param("channelId")
+
+	if len(channelId) != 20 {
+		model.ErrorWithMessage("通道Id错误", ctx)
+		return
+	}
+
+	err := channelService.DeleteChannel(channelId)
+	if err != nil {
+		model.ErrorWithMessage("删除通道失败", ctx)
+		return
+	}
+	model.OK(ctx)
 }

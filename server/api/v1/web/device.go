@@ -3,24 +3,35 @@ package web
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"nebula.xyz/global"
 	"nebula.xyz/model"
+	"nebula.xyz/model/request"
 	resp "nebula.xyz/model/response"
 	"nebula.xyz/model/system"
-	"strconv"
 )
 
 type DeviceApi struct{}
 
-// GetAllDeviceInfo 获取所有设备Api
-func (d *DeviceApi) GetAllDeviceInfo(c *gin.Context) {
-	devices, err := deviceService.GetAllDeviceInfo()
+// GetDeviceInfoPagination 分页获取所有设备Api
+func (d *DeviceApi) GetDeviceInfoPagination(c *gin.Context) {
+	var pagination request.Pagination
+
+	err := c.ShouldBindJSON(&pagination)
+	if err != nil {
+		model.ErrorWithMessage("请检查分页数据", c)
+		return
+	}
+	devicePagination, total, err := deviceService.GetDevicePagination(pagination)
 	if err != nil {
 		global.Logger.Error("查询设备信息失败")
 		model.ErrorWithMessage("获取失败", c)
 		return
 	}
-	model.ErrorWithDetailed(devices, "获取成功", c)
+	model.OkWithDetailed(resp.PaginationResult{
+		List:  devicePagination,
+		Total: total,
+	}, "获取成功", c)
 }
 
 // GetDeviceInfoById 根据Id获取设备信息
@@ -58,33 +69,48 @@ func (d *DeviceApi) UpdateDeviceInfo(c *gin.Context) {
 	model.OKWithMessage("更新成功", c)
 }
 
-// GenerateDevice 生成设备，以及要生成通道的个数
+// GenerateDevice 生成临时一个设备
 func (d *DeviceApi) GenerateDevice(c *gin.Context) {
-	genChannelNum := c.DefaultQuery("channelNum", "0")
-	genInfo := resp.GenerateInfo{}
 	device, err := deviceService.GenerateDevice()
 	if err != nil {
 		model.ErrorWithMessage("生成设备失败", c)
 		return
 	}
-	genInfo.Device = device
-	num, _ := strconv.Atoi(genChannelNum)
-	if num <= 0 {
-		model.OkWithDetailed(genInfo, "生成设备成功", c)
-		return
-	}
-	channels, err := channelService.GenerateChannel(num, device)
-	if err != nil {
-		model.ErrorWithMessage("生成通道失败", c)
-		return
-	}
-	genInfo.Channels = channels
-	genInfo.ChannelSum = len(channels)
-	model.OkWithDetailed(genInfo, "生成设备成功", c)
+	model.OkWithDetailed(device.DeviceId, "生成设备成功", c)
 	return
 }
 
-// DeleteDevice 删除指定设备
+// CreateDevice 创建设备
+func (d *DeviceApi) CreateDevice(c *gin.Context) {
+	var deviceCreate request.DeviceCreate
+
+	err := c.ShouldBindJSON(&deviceCreate)
+	if err != nil {
+		model.ErrorWithMessage("服务器内部异常", c)
+		c.Abort()
+	}
+
+	err = deviceService.CreateDevice(deviceCreate)
+	if err != nil {
+		global.Logger.Error("创建设备失败", zap.Error(err))
+		model.ErrorWithMessage("创建设备失败", c)
+		c.Abort()
+	}
+	model.OKWithMessage("创建设备成功", c)
+}
+
+// DeleteDevice 删除设备
 func (d *DeviceApi) DeleteDevice(c *gin.Context) {
-	// TODO 删除指定设备
+	deviceId := c.Param("deviceId")
+
+	if len(deviceId) != 20 {
+		model.ErrorWithMessage("设备Id错误", c)
+		return
+	}
+	err := deviceService.DeleteDevice(deviceId)
+	if err != nil {
+		model.ErrorWithMessage("删除设备失败", c)
+		return
+	}
+	model.OKWithMessage("删除设备成功", c)
 }

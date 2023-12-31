@@ -1,13 +1,10 @@
 <template>
   <div class="tradingHistory">
     <div class="tradingHistory_header">
-      <h2 class="font18">栽种记录</h2>
-      <p class="rowBC">
-        <a-space>
-          <span>最近7天栽种植物总量：</span>
-          <span class="font14_blue">{{ total }}</span>
-        </a-space>
-        <span>最近七天</span>
+      <h2 class="font18">网络状态</h2>
+      <p class="rowBC" style="justify-content: left">
+        <span style="width: 30%">下载：{{ '1.04Mpbs' }}</span>
+        <span style="width: 30%">上传：{{ '2.10Mpbs' }}</span>
       </p>
     </div>
     <!--  -->

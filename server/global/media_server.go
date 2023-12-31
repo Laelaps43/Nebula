@@ -18,4 +18,8 @@ type Media interface {
 
 	GetSecret() string
 	SetSecret(s string)
+
+	SetMediaServerId(serverId string)
+
+	GetMediaServerId() string
 }

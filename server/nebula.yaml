@@ -1,7 +1,7 @@
 server:
   mode: dev # 系统影响环境，dev prod test
   port: 8081  # web运行的端口号
-  route-prefix: "abc"  # 路由前缀
+  router-prefix: "/api/v1"  # 路由前缀
   login-max-num:  "6" # 最大登录次数
   login-timeout:  "1000"
   cache-type: redis # 指定缓存
@@ -19,6 +19,7 @@ sip:
 
 media:
   address: "192.168.2.214"
+  media-server-id: "192.168.2.214"
   rtp: "10000"  # media 接收GB28181RTP流端口
   restful: 8080  # media 服务器restfulapi地址
   secret: "admin@nebula.com" # zlm secret key 用来请求zlm接口验证

@@ -9,7 +9,6 @@ import (
 	"nebula.xyz/helper"
 	"nebula.xyz/model/request"
 	"nebula.xyz/model/system"
-	"nebula.xyz/sip"
 	"nebula.xyz/utils"
 	"strings"
 )
@@ -20,11 +19,11 @@ func (v *VideoService) RecordVideo(device system.Device, channel system.DeviceCh
 	stream := &system.Stream{DeviceId: device.DeviceId, ChannelId: channel.ChannelId}
 	err := stream.GetStreamByDeviceAndChannel()
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		stream, err = sip.Play(stream)
-		if err != nil {
-			global.Logger.Error("录像错误", zap.Error(err))
-			return err
-		}
+		//stream, err = sip.Play(&)
+		//if err != nil {
+		//	global.Logger.Error("录像错误", zap.Error(err))
+		return err
+		//}
 	}
 	// 向ZLM提供请求录像
 	start := &request.StartRecord{

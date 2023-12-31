@@ -8,7 +8,7 @@ import (
 
 // Response 响应消息体
 type Response struct {
-	Code    int    `json:"code"`    // Http 状态码
+	Code    int    `json:"code"`    // Http 状态码 1正确返回， 0 为错误返回
 	Data    any    `json:"data"`    // 返回的数据
 	Message string `json:"message"` // 返回消息
 }

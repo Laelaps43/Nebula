@@ -7,5 +7,5 @@ import (
 )
 
 func TestBcryptHash(t *testing.T) {
-	fmt.Println(utils.BcryptHash("nebula"))
+	fmt.Println(utils.BcryptHash("123"))
 }

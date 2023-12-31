@@ -2,12 +2,7 @@ package response
 
 // 登录返回状态
 
-import (
-	"nebula.xyz/model/system"
-)
-
 type LoginResponse struct {
-	User      *system.SysUser `json:"user"`
-	Token     string          `json:"token"`
-	ExpiresAt int64           `json:"expiresAt"`
+	Token     string `json:"token"`
+	ExpiresAt int64  `json:"expiresAt"`
 }

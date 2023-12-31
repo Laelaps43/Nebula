@@ -24,6 +24,10 @@ const (
 	SipServerON  = 1
 	SipServerOFF = 0
 
+	// 流状态
+	StreamStart = "0"
+	StreamClose = "1"
+
 	// 设备状态
 	DeviceOnline  = "1"
 	DeviceOffline = "0"
@@ -38,6 +42,9 @@ const (
 
 	ZLMeidaHookFailMessage    = "parser on_play_hook interface param fail, auth fail and not allow play"
 	ZLMeidaHookSuccessMessage = "success"
+
+	// 系统设备默认是传输协议
+	DefaultTransPort = "UDP"
 )
 
 const (

@@ -1,11 +1,11 @@
-package request
+package zlm
 
 type ServerKeepalive struct {
 	MediaServerId string              `json:"mediaServerId,omitempty"`
-	Data          ServerKeepaliveData `json:"data"`
+	Data          serverKeepaliveData `json:"data"`
 }
 
-type ServerKeepaliveData struct {
+type serverKeepaliveData struct {
 	Buffer                int `json:"Buffer,omitempty"`
 	BufferLikeString      int `json:"BufferLikeString,omitempty"`
 	BufferList            int `json:"BufferList,omitempty"`

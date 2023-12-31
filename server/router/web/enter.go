@@ -1,10 +1,15 @@
 package web
 
+import "nebula.xyz/router"
+
 type webRouter struct {
 	Hello
 	UserRouter
+	RoleRouter
+	HomeRouter
 	DeviceRouter
-	ZlmHookRouter
+	SystemRouter
+	router.ZlmHookRouter
 	ChannelRouter
 }
 

@@ -7,6 +7,7 @@ import (
 	"nebula.xyz/helper"
 	"nebula.xyz/model"
 	"nebula.xyz/model/request"
+	"nebula.xyz/model/response"
 	"nebula.xyz/model/system"
 	"nebula.xyz/sip"
 )
@@ -15,12 +16,28 @@ type VideoApi struct{}
 
 // PlayVideo 点播
 func (v *VideoApi) PlayVideo(ctx *gin.Context) {
+	var videoPayload request.VideoRequestPayload
+	err := ctx.ShouldBindJSON(&videoPayload)
+	if err != nil {
+		model.ErrorWithMessage("参数错误, 播放错误", ctx)
+		return
+	}
 	global.Logger.Info("执行PlayVideo函数")
-	sip.Play(&system.Stream{
-		ChannelId: "37070000081318000012",
-		DeviceId:  "37070000081118000001",
-	})
-	model.OKWithMessage("Hello!!!", ctx)
+	playStream, err := sip.Play(videoPayload)
+	if err != nil {
+		global.Logger.Error("点播错误:", zap.Error(err))
+		model.ErrorWithMessage("播放错误", ctx)
+		return
+	}
+
+	model.OkWithDetailed(
+		response.PlayResponsePayload{
+			HTTP:  playStream.HTTP,
+			RTSP:  playStream.RTSP,
+			RTMP:  playStream.RTMP,
+			WSFLV: playStream.WSFLV,
+		}, "点播成功", ctx)
+	return
 }
 
 // StopPlay 停止直播，这里需要考虑流是否在录像

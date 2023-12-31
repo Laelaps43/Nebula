@@ -32,4 +32,13 @@ var (
 	SingleFlight = &singleflight.Group{}
 
 	MediaServer Media
+
+	Info = &SystemInfo{
+		CPUList:  make([]string, 60, 60),
+		MemList:  make([]string, 60, 60),
+		DiskList: make([]string, 60, 60),
+		UpList:   make([]string, 60, 60),
+		DownList: make([]string, 60, 60),
+		TimeList: make([]string, 60, 60),
+	}
 )

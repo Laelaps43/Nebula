@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ghettovoice/gosip/sip"
+	"nebula.xyz/model/request"
+
 	//"nebula.xyz/sip/sdp"
 	"net"
 	"strconv"
@@ -25,20 +27,21 @@ import (
 var ssrcLock *sync.Mutex = &sync.Mutex{}
 
 // Play 点播
-func Play(stream *system.Stream) (*system.Stream, error) {
+func Play(payload request.VideoRequestPayload) (*system.Stream, error) {
 	global.Logger.Debug("开始点播.....")
-	channelTmp := &system.DeviceChannel{ChannelId: stream.ChannelId}
 	var channel system.DeviceChannel
 	var err error
 	// 数据库中不存在对应通道
-	if err = channelTmp.DeviceChannelById(); err != nil {
+	if err = global.DB.Model(&channel).Where("channel_id = ? And device_id = ?", payload.ChannelId, payload.DeviceId).Find(&channel).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("通道不存在")
 		}
 		return nil, err
 	}
-	channel = *channelTmp
-	stream.DeviceId = channel.DeviceId
+	stream := system.Stream{
+		ChannelId: payload.ChannelId,
+		DeviceId:  payload.DeviceId,
+	}
 	device := &system.Device{DeviceId: channel.DeviceId}
 
 	// TODO 拉流
@@ -57,6 +60,10 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 		return nil, errors.New("设备离线")
 	}
 
+	err = global.DB.Model(&stream).Where("channel_id = ? And device_id = ?", payload.ChannelId, payload.DeviceId).Find(&stream).Error
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
 	//
 	if stream.StreamId == "" {
 		global.Logger.Debug("stream 不存在StreamId")
@@ -68,7 +75,7 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 		}
 		ssrcLock.Unlock()
 	}
-	stream, err = sipPlayPush(stream, &channel, device)
+	_, err = sipPlayPush(&stream, &channel, device)
 	if err != nil {
 		global.Logger.Info("点播失败", zap.Error(err))
 		return nil, err
@@ -86,7 +93,7 @@ func Play(stream *system.Stream) (*system.Stream, error) {
 	if err != nil {
 		return nil, err
 	}
-	return stream, nil
+	return &stream, nil
 }
 
 // SIP

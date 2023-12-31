@@ -18,10 +18,10 @@ import (
 )
 
 // DoLogin 登录API
-func (U *UserApi) DoLogin(c *gin.Context) {
+func (u *UserApi) DoLogin(c *gin.Context) {
 	var userRequest sysRequest.Login // 登录信息
 
-	err := c.BindJSON(&userRequest) // 获取到前端传来的数据
+	err := c.ShouldBindJSON(&userRequest) // 获取到前端传来的数据
 	//clientIp := c.ClientIP()
 	if err != nil {
 		model.ErrorWithMessage("帐号错误或者密码错误！", c)
@@ -41,8 +41,8 @@ func (U *UserApi) DoLogin(c *gin.Context) {
 	//TODO 需要不需要去考虑规定时间内，最大的请求次数，或者是对某一个操作的请求次数
 
 	//TODO 登录认证
-	u := &system.SysUser{Email: userRequest.Email, PassWord: userRequest.Password}
-	user, err := userService.Login(u)
+	uRequest := &system.SysUser{Email: userRequest.Email, PassWord: userRequest.Password}
+	user, err := userService.Login(uRequest)
 	if err != nil {
 		global.Logger.Error("登录失败，用户名或密码错误！", zap.Error(err))
 
@@ -71,12 +71,13 @@ func (U *UserApi) DoLogin(c *gin.Context) {
 	}
 	global.Logger.Info("验证成功，正在生成token.....")
 
-	U.TokenGen(c, user)
+	global.Logger.Error("user" + strconv.Itoa(int(user.ID)) + user.Email)
+	u.TokenGen(c, user)
 
 }
 
 // TokenGen 生成Token
-func (U *UserApi) TokenGen(c *gin.Context, user *system.SysUser) {
+func (u *UserApi) TokenGen(c *gin.Context, user *system.SysUser) {
 	j := utils.NewJWT()
 	// 处理Token到期时间
 	eq, _ := utils.ParseExpireTime(global.CONFIG.JWT.JwtExpire)
@@ -114,7 +115,6 @@ func (U *UserApi) TokenGen(c *gin.Context, user *system.SysUser) {
 		}
 	}
 	model.OkWithDetailed(response.LoginResponse{
-		User:      user,
 		Token:     token,
 		ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
 	}, "登录成功", c)

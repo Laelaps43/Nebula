@@ -6,7 +6,7 @@ import "nebula.xyz/model"
 type SysButton struct {
 	model.NEBULA
 	ID   uint   `gorm:"primaryKey comment:主键"`
-	Slug string `gorm:"comment:按钮唯一表示"`
+	Slug string `gorm:"uniqueIndex,comment:按钮唯一表示"`
 	Name string `gorm:"comment:按钮名称"`
 	Desc string `gorm:"按钮描述"`
 }

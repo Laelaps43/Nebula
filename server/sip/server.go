@@ -69,8 +69,8 @@ func InitSipServer() {
 		sipServer.Sort = 1
 		global.DB.Create(&sipServer)
 	}
-	global.Logger.Info("初始化SIP服务中...")
 	// 初始化媒体服务器
+	global.Logger.Info("初始化媒体服务中...")
 	meidaTmp := &system.MediaServer{}
 	result = global.DB.Order("sort asc").Where("status = ?", helper.MediaStatusON).First(&meidaTmp)
 	global.MediaServer = meidaTmp
@@ -82,6 +82,7 @@ func InitSipServer() {
 		global.MediaServer.SetRTP(global.CONFIG.Media.RTP)
 		global.MediaServer.SetRTMPPort(global.CONFIG.Media.RTMPPort)
 		global.MediaServer.SetSecret(global.CONFIG.Media.Secret)
+		global.MediaServer.SetMediaServerId(global.CONFIG.Media.MediaServerId)
 		global.DB.Create(&meidaTmp)
 	}
 	_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
@@ -90,6 +91,7 @@ func InitSipServer() {
 		return
 	}
 	global.Logger.Info("初始化媒体服务器完成")
+	global.Logger.Info("初始化SIP服务中...")
 	NewSipServer()
 }
 
