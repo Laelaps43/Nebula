@@ -52,43 +52,64 @@ func NewSipServer() {
 }
 
 func InitSipServer() {
-	result := global.DB.Order("sort asc").Where("status = ?", helper.SipServerON).First(&sipServer)
 	// 信令服务器设置
-	// 数据库中可以找到一条数据，则使用数据库中查找到的，负责使用配置文件
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		global.Logger.Debug("未从数据库中获取到服务器信息，从配置文件中获取。")
-		sipServer.SipId = global.CONFIG.SIP.SipId
-		sipServer.Port = global.CONFIG.SIP.Port
-		sipServer.IP = global.CONFIG.SIP.Ip
-		sipServer.Realm = global.CONFIG.SIP.Realm
-		sipServer.Password = global.CONFIG.SIP.Password
-		sipServer.UserAgent = global.CONFIG.SIP.UserAgent
-		sipServer.DevicePrefix = global.CONFIG.SIP.DevicePrefix
-		sipServer.ChannelPrefix = global.CONFIG.SIP.ChannelPrefix
-		sipServer.Status = helper.SipServerON
-		sipServer.Sort = 1
-		global.DB.Create(&sipServer)
+	sipServer = &system.SipServer{
+		SipId:         global.CONFIG.SIP.SipId,
+		Port:          global.CONFIG.SIP.Port,
+		IP:            global.CONFIG.SIP.Ip,
+		Realm:         global.CONFIG.SIP.Realm,
+		Password:      global.CONFIG.SIP.Password,
+		UserAgent:     global.CONFIG.SIP.UserAgent,
+		DevicePrefix:  global.CONFIG.SIP.DevicePrefix,
+		ChannelPrefix: global.CONFIG.SIP.ChannelPrefix,
 	}
+	global.Logger.Info("sip配置: ", zap.Any("sipServer", sipServer))
+
 	// 初始化媒体服务器
 	global.Logger.Info("初始化媒体服务中...")
-	meidaTmp := &system.MediaServer{}
-	result = global.DB.Order("sort asc").Where("status = ?", helper.MediaStatusON).First(&meidaTmp)
-	global.MediaServer = meidaTmp
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		global.Logger.Info("未从数据库中获取到媒体服务器信息，从配置文件中获取。")
-		global.MediaServer.SetAddress(global.CONFIG.Media.Address)
-		global.MediaServer.SetRTSPPort(global.CONFIG.Media.RTSPPort)
-		global.MediaServer.SetRestful(global.CONFIG.Media.Restful)
-		global.MediaServer.SetRTP(global.CONFIG.Media.RTP)
-		global.MediaServer.SetRTMPPort(global.CONFIG.Media.RTMPPort)
-		global.MediaServer.SetSecret(global.CONFIG.Media.Secret)
-		global.MediaServer.SetMediaServerId(global.CONFIG.Media.MediaServerId)
-		global.DB.Create(&meidaTmp)
+	var mediaList []system.MediaServer
+	result := global.DB.Order("sort ASC").Find(&mediaList)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			global.Logger.Info("数据库中不存在媒体服务器数据，等待从配置文件中加载")
+		} else {
+			global.Logger.Error("查询媒体服务器错误", zap.Error(result.Error))
+		}
 	}
-	_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
-	if err != nil {
-		global.Logger.Error("初始化媒体服务器失败")
-		return
+	var tmpService system.MediaServer
+	for _, server := range mediaList {
+		global.MediaServer = &server
+		_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
+		if err != err {
+			global.Logger.Error("媒体服务服务器离线", zap.String("mediaServerId", server.MediaServerId))
+		} else {
+			global.Logger.Info("媒体服务服务器在线", zap.String("mediaServerId", server.MediaServerId))
+			if tmpService.MediaServerId == "" || tmpService.Sort > server.Sort {
+				tmpService = server
+			}
+		}
+		global.MediaServer = nil
+	}
+	if tmpService.MediaServerId == "" {
+		server := system.MediaServer{}
+		global.Logger.Info("未从数据库获取媒体服务器，从配置文件中获取。")
+		server.SetAddress(global.CONFIG.Media.Address)
+		server.SetRTSPPort(global.CONFIG.Media.RTSPPort)
+		server.SetRestful(global.CONFIG.Media.Restful)
+		server.SetRTP(global.CONFIG.Media.RTP)
+		server.SetRTMPPort(global.CONFIG.Media.RTMPPort)
+		server.SetSecret(global.CONFIG.Media.Secret)
+		server.SetMediaServerId(global.CONFIG.Media.MediaServerId)
+		global.MediaServer = &server
+		_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
+		if err != nil {
+			global.Logger.Error("初始化媒体服务器失败")
+			return
+		}
+		server.Status = helper.StreamStart
+		global.DB.Create(global.MediaServer)
+	} else {
+		global.MediaServer = &tmpService
 	}
 	global.Logger.Info("初始化媒体服务器完成")
 	global.Logger.Info("初始化SIP服务中...")

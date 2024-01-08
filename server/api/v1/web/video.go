@@ -89,8 +89,30 @@ func (v *VideoApi) RecordVideo(ctx *gin.Context) {
 		return
 	}
 
-	_ = videoService.RecordVideo(device, channel)
+	err = videoService.RecordVideo(device, channel)
 	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
 		return
 	}
+	model.OKWithMessage("录制成功", ctx)
+	return
+}
+
+func (v *VideoApi) StopRecord(ctx *gin.Context) {
+	global.Logger.Info("执行RecordVideo函数")
+	var record request.RecordVideo
+	err := ctx.ShouldBindJSON(&record)
+	if err != nil {
+		global.Logger.Info("获取录像信息错误", zap.Error(err))
+		model.ErrorWithMessage("获取信息错误", ctx)
+		return
+	}
+	err = videoService.StopRecord(record)
+	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
+		return
+	}
+
+	model.OKWithMessage("停止录制成功", ctx)
+	return
 }

@@ -13,6 +13,8 @@ func (z *ZlmHookRouter) InitZlmHookRouter(Router *gin.RouterGroup) (r gin.IRoute
 	{
 		hookRouter.POST("on_server_keepalive", hookApi.OnServerKeepalive)
 		hookRouter.POST("on_publish", hookApi.OnPublish)
+		hookRouter.POST("on_stream_changed", hookApi.OnStreamChanged)
+		hookRouter.POST("on_record_mp4", hookApi.OnRecordMp4)
 	}
 	return
 }

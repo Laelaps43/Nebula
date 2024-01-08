@@ -1,7 +1,6 @@
 package web
 
 import (
-	"errors"
 	"go.uber.org/zap"
 	"nebula.xyz/global"
 	"nebula.xyz/helper"
@@ -48,16 +47,10 @@ func (d *DeviceService) UpdateDeviceInfoById(device system.Device) (err error) {
 // GenerateDevice 生成一条设备信息
 func (d *DeviceService) GenerateDevice() (device *system.Device, err error) {
 	device = &system.Device{}
-	server := system.SipServer{}
-	err = server.GetSipServerOnLine()
-	if err != nil {
-		global.Logger.Error("获取SipServer信息错误", zap.Error(err))
-		return nil, errors.New("获取SipServer信息错误")
-	}
 	// 生成设备ID
 	for {
 		randInt := utils.RandInt(6)
-		key := server.DevicePrefix + randInt
+		key := global.CONFIG.SIP.DevicePrefix + randInt
 		device.DeviceId = key
 		exist := device.IsExist()
 		if !exist {

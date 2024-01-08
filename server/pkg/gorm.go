@@ -42,6 +42,7 @@ func RegisterTables() {
 		system.MediaServer{},
 		system.SipServer{},
 		system.Stream{},
+		system.Record{},
 	)
 	if err != nil {
 		global.Logger.Error("初始化表失败")

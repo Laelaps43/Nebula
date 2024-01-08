@@ -11,6 +11,7 @@ type webApi struct {
 	UserApi
 	RoleApi
 	VideoApi
+	RecordApi
 	SystemApi
 	DeviceApi
 	ChannelApi
@@ -21,6 +22,7 @@ var (
 	roleService       = service.WebServiceAll.RoleService
 	jwtService        = service.WebServiceAll.JwtService
 	homeService       = service.WebServiceAll.HomeService
+	recordService     = service.WebServiceAll.RecordServer
 	deviceService     = service.WebServiceAll.DeviceService
 	videoService      = service.WebServiceAll.VideoService
 	channelService    = service.WebServiceAll.ChannelService

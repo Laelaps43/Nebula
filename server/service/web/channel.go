@@ -1,7 +1,6 @@
 package web
 
 import (
-	"errors"
 	"go.uber.org/zap"
 	"nebula.xyz/global"
 	"nebula.xyz/helper"
@@ -33,16 +32,10 @@ func (c *ChannelService) GetChannelPagination(pagination request.Pagination) (ch
 // GenerateChannel 生成指定通道个数
 func (c *ChannelService) GenerateChannel() (channel *system.DeviceChannel, err error) {
 	channel = &system.DeviceChannel{}
-	server := system.SipServer{}
-	err = server.GetSipServerOnLine()
-	if err != nil {
-		global.Logger.Error("获取SipServer信息错误", zap.Error(err))
-		return nil, errors.New("获取SipServer信息错误")
-	}
 	// 生成设备ID
 	for {
 		randInt := utils.RandInt(6)
-		key := server.ChannelPrefix + randInt
+		key := global.CONFIG.SIP.ChannelPrefix + randInt
 		channel.ChannelId = key
 		exist := channel.IsExist()
 		if !exist {

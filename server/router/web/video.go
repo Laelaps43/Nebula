@@ -13,6 +13,7 @@ func (h *Hello) InitVideoRouter(Router *gin.RouterGroup) (R gin.IRouter) {
 	{
 		helloRouter.POST("play", videoApi.PlayVideo)
 		helloRouter.POST("record", videoApi.RecordVideo)
+		helloRouter.POST("stop/record", videoApi.StopRecord)
 	}
 	return helloRouter
 }

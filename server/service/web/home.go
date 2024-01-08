@@ -1,6 +1,8 @@
 package web
 
 import (
+	"go.uber.org/zap"
+	"nebula.xyz/global"
 	"nebula.xyz/helper"
 	resp "nebula.xyz/model/response"
 	"nebula.xyz/model/system"
@@ -25,6 +27,11 @@ func (s HomeService) GetOverView() resp.OverViewResult {
 
 	// 获取正在录像设备
 	var videoCount int64 = 0
+	err := global.DB.Model(&system.Stream{}).Where("record = ?", helper.StreamRecorded).Count(&videoCount).Error
+	if err != nil {
+		global.Logger.Error("获取录像设备数量错误", zap.Error(err))
+		videoCount = 0
+	}
 	result := resp.OverViewResult{
 		OnlineDevice:  onLineCount,
 		OfflineDevice: offLineCount,

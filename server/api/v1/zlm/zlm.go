@@ -28,11 +28,14 @@ func (z *ZlmHookApi) OnServerKeepalive(c *gin.Context) {
 	}
 	global.Logger.Info(fmt.Sprintf("收到ZLM id %s 的心跳", keepalive.MediaServerId))
 	zlmService.UpdateServerStatus(keepalive)
+	hookResponse := response.ZLMHookResponse{
+		Code: helper.ZLMeidaHookSuccess,
+		Msg:  helper.ZLMeidaHookSuccessMessage,
+	}
+	marshal, _ := json.Marshal(hookResponse)
+	global.Logger.Info("hookResponse", zap.String("json", string(marshal)))
 	c.JSON(http.StatusOK,
-		response.ZLMHookResponse{
-			Code: helper.ZLMeidaHookSuccess,
-			Msg:  helper.ZLMeidaHookSuccessMessage,
-		})
+		hookResponse)
 	return
 }
 
@@ -74,9 +77,53 @@ func (z *ZlmHookApi) OnStreamChanged(c *gin.Context) {
 			})
 		return
 	}
-
+	marshal, err := json.Marshal(streamChange)
+	global.Logger.Info("收到流改变", zap.String("streamInfo", string(marshal)))
+	err = zlmService.OnStreamChanged(streamChange)
+	if err != nil {
+		c.JSON(http.StatusOK,
+			response.ZLMHookResponse{
+				Code: helper.ZLMeidaHookFail,
+				Msg:  helper.ZLMeidaHookFailMessage,
+			})
+		return
+	}
+	c.JSON(http.StatusOK,
+		response.ZLMHookResponse{
+			Code: helper.ZLMeidaHookSuccess,
+			Msg:  helper.ZLMeidaHookSuccessMessage,
+		})
+	return
 }
 
 func (z *ZlmHookApi) OnPlay(ctx *gin.Context) {
 
+}
+
+func (z *ZlmHookApi) OnRecordMp4(ctx *gin.Context) {
+	var recordMp4 zlm.RecordMp4
+
+	err := ctx.ShouldBindJSON(&recordMp4)
+	if err != nil {
+		global.Logger.Debug("录制 mp4 完成后通知事件绑定参数失败", zap.Error(err))
+		ctx.JSON(http.StatusOK, response.ZLMHookResponse{
+			Code: helper.ZLMeidaHookFail,
+			Msg:  helper.ZLMeidaHookFailMessage,
+		})
+		return
+	}
+
+	err = zlmService.OnRecordMp4(recordMp4)
+	if err != nil {
+		ctx.JSON(http.StatusOK, response.ZLMHookResponse{
+			Code: helper.ZLMeidaHookFail,
+			Msg:  helper.ZLMeidaHookFailMessage,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, response.ZLMHookResponse{
+		Code: helper.ZLMeidaHookSuccess,
+		Msg:  helper.ZLMeidaHookSuccessMessage,
+	})
+	return
 }

@@ -11,7 +11,7 @@ type Stream struct {
 	ChannelId        string `gorm:"comment:通道ID"`
 	DeviceId         string `gorm:"comment:设备ID"`
 	StreamType       string `gorm:"comment:pull服务器拉流，push设备推流"`
-	Status           string `gorm:"comment:流状态 0 正常 1 关闭 -1 尚未开始"`
+	Status           uint   `gorm:"comment:流状态 1-关闭 2-正常"`
 	StreamId         string `gorm:"primaryKey, comment:流ID SSRC"`
 	HTTP             string `gorm:"comment:mu38地址"`
 	RTMP             string `gorm:"comment:RTMP地址"`
@@ -19,10 +19,11 @@ type Stream struct {
 	WSFLV            string `gorm:"comment:WSFLV地址"`
 	ZlmAccept        bool   `gorm:"comment:zlm是否收到流"`
 	App              string `gorm:"comment:zlm应用名"`
-	OriginType       string `gorm:"comment:zlm产生流类型"`
+	OriginType       int    `gorm:"comment:zlm产生流类型"`
 	Schema           string `gorm:"comment:zlm流协议"`
 	TotalReaderCount int    `gorm:"comment:zlm观看总人数"`
 	VHost            string `gorm:"comment:zlm虚拟主机"`
+	Record           uint   `gorm:"comment:流是否被录制 1-否 2-是"`
 
 	Start, End time.Time `gorm:"-"`
 }

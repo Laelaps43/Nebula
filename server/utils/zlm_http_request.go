@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ZLMHttpRequest(path string, body io.Reader) (string, error) {
+func ZLMHttpRequest(path string, body io.Reader) ([]byte, error) {
 	url := "http://" + global.MediaServer.GetAddress() + ":" + global.MediaServer.GetRestful() + "/index/api/" + path
 	global.Logger.Info(url)
 	var resp *http.Response
@@ -20,7 +20,7 @@ func ZLMHttpRequest(path string, body io.Reader) (string, error) {
 	}
 	if err != nil {
 		global.Logger.Error("向Zlm发送请求失败", zap.String("path", path))
-		return "", err
+		return nil, err
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -32,7 +32,7 @@ func ZLMHttpRequest(path string, body io.Reader) (string, error) {
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		global.Logger.Error("读取Zlm返回失败", zap.Error(err))
-		return "", err
+		return nil, err
 	}
-	return string(b), nil
+	return b, nil
 }

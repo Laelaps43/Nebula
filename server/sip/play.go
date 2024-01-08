@@ -69,11 +69,15 @@ func Play(payload request.VideoRequestPayload) (*system.Stream, error) {
 		global.Logger.Debug("stream 不存在StreamId")
 		ssrcLock.Lock()
 		stream.StreamId = GetSSRC(&channel)
+		stream.App = helper.StreamApp
 		if err := stream.Save(); err != nil {
 			ssrcLock.Unlock()
 			return nil, err
 		}
 		ssrcLock.Unlock()
+	}
+	if stream.Status == helper.StreamStart {
+		return &stream, nil
 	}
 	_, err = sipPlayPush(&stream, &channel, device)
 	if err != nil {
@@ -207,7 +211,10 @@ func sipPlayPush(
 		return nil, err
 	}
 	resp := <-tx.Responses()
-	global.Logger.Info("接受到Invite回应")
+	if resp == nil {
+		return nil, errors.New("没有接收到Invite回应")
+	}
+	global.Logger.Info("接收到Invite回应")
 	ack := sip.NewAckRequest("", request, resp, "", nil)
 	ack.SetRecipient(request.Recipient())
 	ack.AppendHeader(&sip.ContactHeader{

@@ -1,7 +1,5 @@
 package web
 
-import "nebula.xyz/router"
-
 type webRouter struct {
 	Hello
 	UserRouter
@@ -9,7 +7,7 @@ type webRouter struct {
 	HomeRouter
 	DeviceRouter
 	SystemRouter
-	router.ZlmHookRouter
+	RecordRouter
 	ChannelRouter
 }
 

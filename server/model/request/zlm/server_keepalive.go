@@ -2,6 +2,7 @@ package zlm
 
 type ServerKeepalive struct {
 	MediaServerId string              `json:"mediaServerId,omitempty"`
+	HookIndex     int                 `json:"hook_index"`
 	Data          serverKeepaliveData `json:"data"`
 }
 

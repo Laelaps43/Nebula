@@ -25,8 +25,23 @@ const (
 	SipServerOFF = 0
 
 	// 流状态
-	StreamStart = "0"
-	StreamClose = "1"
+	StreamClose = 1
+	StreamStart = 2
+
+	StreamUnRecord = 1 // 流未被录制
+
+	StreamRecorded = 2 // 流正在被录制
+
+	StreamApp = "rtp" // 国标固定为rtp
+
+	// 录制类型
+	RecordHLS = 0
+
+	RecordMP4 = 1
+
+	RecordMaxSecond = 0
+
+	RecordPath = "/opt/media/video"
 
 	// 设备状态
 	DeviceOnline  = "1"
@@ -48,9 +63,11 @@ const (
 )
 
 const (
-	ZlmGetApiList  = "getApiList"
-	ZlmStartRecord = "startRecord"
-	ZlmIsRecording = "isRecording"
+	ZlmGetApiList    = "getApiList"
+	ZlmStartRecord   = "startRecord"
+	ZlmIsRecording   = "isRecording"
+	ZlmStopRecording = "stopRecord"
+	ZlmLoadMP4File   = "loadMP4File"
 )
 
 type QueryType string

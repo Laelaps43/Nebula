@@ -1,13 +1,11 @@
 package web
 
-import "nebula.xyz/service"
-
 type WebService struct {
 	JwtService
-	service.ZLMService
 	UserService
 	HomeService
 	RoleService
+	RecordServer
 	VideoService
 	DeviceService
 	ChannelService

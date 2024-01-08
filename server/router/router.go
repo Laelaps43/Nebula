@@ -13,6 +13,7 @@ func Routers() *gin.Engine {
 
 	// 路由汇总
 	webRouter := web.WebRouterAll
+	zlmRouter := ZlmHookRouter{}
 	global.Logger.Error("routerPrefix" + global.CONFIG.SERVER.RouterPrefix)
 	// 基本路由，不用被鉴权
 	PublicGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
@@ -25,11 +26,12 @@ func Routers() *gin.Engine {
 		webRouter.InitDeviceRouter(PublicGroup)
 		webRouter.InitChannelRoute(PublicGroup)
 		webRouter.InitSystemRouter(PublicGroup)
+		webRouter.InitRecordRouter(PublicGroup)
 	}
 	// ZLM webhook路由
 	ZLMediaKitGroup := Router.Group("")
 	{
-		webRouter.InitZlmHookRouter(ZLMediaKitGroup)
+		zlmRouter.InitZlmHookRouter(ZLMediaKitGroup)
 	}
 
 	// 鉴定路由

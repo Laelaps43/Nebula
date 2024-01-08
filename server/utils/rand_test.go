@@ -18,3 +18,11 @@ func TestRandInt(t *testing.T) {
 	fmt.Println(RandInt(3))
 	fmt.Println(RandInt(3))
 }
+
+func TestGetRandStreamId(t *testing.T) {
+	fmt.Println(GetRandStreamId())
+	fmt.Println(GetRandStreamId())
+	fmt.Println(GetRandStreamId())
+	fmt.Println(GetRandStreamId())
+	fmt.Println(GetRandStreamId())
+}
