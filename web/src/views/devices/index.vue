@@ -147,6 +147,7 @@
     },
     {
       label: '删除',
+      enable: true,
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {

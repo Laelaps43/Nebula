@@ -187,13 +187,29 @@
       label: '播放',
       auth: AuthEnum.channel_show,
       onClick: async (row) => {
-        console.log("---------------");
-        console.log(playerRef.value);
         await handlePlay({
           channelId: row.channelId,
           deviceId: String(route.params.id),
         });
       },
+    },
+    {
+      label: '录制',
+      enable: true,
+      popConfirm: {
+        title: '确认录制吗？',
+        onConfirm: async (row) => {
+          const result = await fetchApi.video_record({
+            channelId: row.channelId,
+            deviceId: String(route.params.id),
+          });
+          if (result) {
+            createMessage.success('录制成功，请转到远端录像');
+            refresh();
+          }
+        },
+      },
+      auth: AuthEnum.device_delete,
     },
     {
       label: '编辑',
@@ -205,6 +221,7 @@
     },
     {
       label: '删除',
+      enable: true,
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {
@@ -241,7 +258,7 @@
       const res = await fetchApi.channel_create({
         name: formCreateChannel.value.name,
         channelId: formCreateChannel.value.channelId,
-        deviceId: route.params.id,
+        deviceId: route.params.id[0],
       });
       modalCreateChannel.loading = false;
       modalCreateChannel.visible = false;
@@ -258,7 +275,7 @@
   const videoOptions = ref({
     autoplay: true,
     controls: true,
-    src: 'http://192.168.2.214:8080/rtp/072E915C/hls.m3u8',
+    src: '',
     type: 'application/x-mpegURL',
   });
   const playVisible = ref(false);

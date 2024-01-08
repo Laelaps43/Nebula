@@ -3,8 +3,9 @@ import {
   ReqParams,
   ResResult,
   UpdateChannelParams,
-  VideoRequestPayload, VideoResponsePayload
-} from "./model";
+  VideoRequestPayload,
+  VideoResponsePayload,
+} from './model';
 import { get, post } from '/@/utils/http';
 
 enum URL {
@@ -14,6 +15,7 @@ enum URL {
   channel_update = `/v1/channel/update`,
   channel_delete = `/v1/channel/delete`,
   channel_play = `/v1/video/play`,
+  video_record = `/v1/video/record`,
 }
 
 const channel_page = async (data: ReqParams) => post<ResResult>({ url: URL.channel_page, data });
@@ -30,6 +32,9 @@ const channel_delete = async (channelId: string) =>
 const video_play = async (data: VideoRequestPayload) =>
   post<VideoResponsePayload>({ url: URL.channel_play, data });
 
+const video_record = async (data: VideoRequestPayload) =>
+  post<string>({ url: URL.video_record, data });
+
 export default {
   channel_page,
   channel_generate,
@@ -37,4 +42,5 @@ export default {
   channel_update,
   channel_delete,
   video_play,
+  video_record,
 };

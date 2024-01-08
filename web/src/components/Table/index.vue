@@ -23,8 +23,8 @@
     >
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.key === 'status'">
-          <a-tag :bordered="false" :color="getStatusColor(record.status || record.enable)"
-            >{{ getStatusLabel(record.status || record.enable) }}
+          <a-tag :bordered="false" :color="getStatusColor(record.status || record.enable || record.isRecording)"
+            >{{ getStatusLabel(record.status || record.enable || record.isRecording) }}
           </a-tag>
         </template>
         <template v-if="column.key === 'role'">
@@ -51,9 +51,9 @@
             <span v-else-if="action.permission">
               <!-- 按钮 -->
               <a @click="action?.onClick(record)" :type="action.type">{{ action.label }}</a>
-              <!-- 分割线 -->
-              <a-divider type="vertical" v-if="index < getActions.length - 1" />
             </span>
+            <!-- 分割线 -->
+            <a-divider type="vertical" v-if="index < getActions.length - 1" />
           </template>
         </template>
       </template>
@@ -177,7 +177,7 @@
                 type: 'link',
                 ...action,
                 ...(popConfirm || {}),
-                enable: !!popConfirm,
+                enable: action.enable,
                 permission: hasPermission(action.auth),
               };
             })
