@@ -8,7 +8,7 @@
       </a-col>
       <a-col :span="12">
         <a-card :bordered="false">
-          <!-- <TradingHistory :loading="loading" /> -->
+          <ServerInfo />
         </a-card>
       </a-col>
     </a-row>
@@ -29,6 +29,7 @@
   // import fetchApi from '/@/api/home';
   import { useHomeStore } from '/@/store/modules/home';
   import SystemHistory from '/@/views/home/components/SystemHistory.vue';
+  import ServerInfo from '/@/views/home/components/serverInfo.vue';
 
   const store = useHomeStore();
   const loading = ref(false);
