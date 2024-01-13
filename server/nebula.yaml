@@ -3,7 +3,7 @@ server:
   port: 8081  # web运行的端口号
   router-prefix: "/api/v1"  # 路由前缀
   login-max-num:  "6" # 最大登录次数
-  login-timeout:  "1000"
+  login-timeout:  "100m"
   cache-type: redis # 指定缓存
   db-type: mysql
 

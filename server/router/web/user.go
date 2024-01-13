@@ -18,8 +18,8 @@ func (a *UserRouter) InitUserRouter(Router *gin.RouterGroup) (R gin.IRouter) {
 		userRouter.POST("enable", userApi.EnableUser)
 		userRouter.POST("update", userApi.UpdateUser)
 		userRouter.GET("delete/:userId", userApi.DeleteUser)
-		userRouter.GET("info", userApi.GetLoginUserInfo)
-		userRouter.POST("edit", userApi.EditUser)
+		userRouter.GET("my/info", userApi.GetLoginUserInfo)
+		userRouter.POST("my/edit", userApi.EditUser)
 	}
 	return userRouter
 }

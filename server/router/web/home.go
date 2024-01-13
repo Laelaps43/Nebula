@@ -8,10 +8,12 @@ import (
 type HomeRouter struct{}
 
 func (h *HomeRouter) InitHomeRouter(Router *gin.RouterGroup) (R gin.IRouter) {
-	homeRouter := Router.Group("/home")
+	homeRouter := Router.Group("home")
 	homeApi := web.WebApiAll.HomeApi
 	{
-		homeRouter.GET("/overview", homeApi.GetOverView)
+		homeRouter.GET("overview", homeApi.GetOverView)
+		homeRouter.GET("system/info", homeApi.GetSystemInfo)
+		homeRouter.GET("server/info", homeApi.GetServerInfo)
 	}
 	return homeRouter
 }

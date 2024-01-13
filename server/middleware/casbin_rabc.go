@@ -18,7 +18,7 @@ var casbinService = service.SysServiceAll
 func CasbinHandler() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		if global.CONFIG.SERVER.Mode != "dev" {
+		if global.CONFIG.SERVER.Mode == "dev" {
 			global.Logger.Info("开始权限认证")
 			waitUser, err := utils.GetClaims(c)
 			if err != nil {

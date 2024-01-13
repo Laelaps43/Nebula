@@ -10,6 +10,8 @@ type SysMenu struct {
 	ParentId string `gorm:"comment:父菜单ID"`
 	Slug     string `gorm:"comment:菜单唯一表示"`
 	Desc     string `gorm:"comment:菜单描述"`
+	Path     string `gorm:"comment:按钮对应URL"`
+	Method   string `gorm:"comment:请求方法"`
 }
 
 func (m *SysMenu) TableName() string {

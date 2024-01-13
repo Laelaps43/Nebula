@@ -46,7 +46,11 @@ func (c *CasbinService) Casbin() *casbin.SyncedCachedEnforcer {
 			return
 		}
 		global.Logger.Info("加载字符串模型成功")
-		syncedCachedEnforcer, _ = casbin.NewSyncedCachedEnforcer(modelFromString, adapter)
+		syncedCachedEnforcer, err = casbin.NewSyncedCachedEnforcer(modelFromString, adapter)
+		if err != nil {
+			global.Logger.Error("创建Casbin错误", zap.Error(err))
+		}
+		global.Logger.Info("开始加载政策模型.....")
 		syncedCachedEnforcer.SetExpireTime(60 * 60)
 		err = syncedCachedEnforcer.LoadPolicy()
 		if err != nil {
