@@ -27,3 +27,19 @@ export interface PageResult {
   }[];
   total: number;
 }
+
+export interface Permission {
+  menus: PermissionDetails;
+  buttons: PermissionDetails;
+}
+
+export interface PermissionDetails {
+  label: string;
+  value: string;
+}
+
+export interface PermissionUpdate {
+  menu: [];
+  button: [];
+  roleId: string;
+}
