@@ -252,7 +252,7 @@
   const tableActions = reactive([
     {
       label: '编辑权限',
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.role_create,
       onClick: (row) => {
         fetchPermission(row.id);
         formPermission.roleId = row.id;
@@ -260,7 +260,7 @@
     },
     {
       label: '新增子角色',
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.role_create,
       onClick: async (row) => {
         modalCreateRole.visible = true;
         formCreateRole.value.parentId = row.id;
@@ -274,7 +274,7 @@
     },
     {
       label: '编辑',
-      auth: AuthEnum.device_update,
+      auth: AuthEnum.role_update,
       onClick: async (row) => {
         modalUpdateRole.visible = true;
         formUpdateRole.value.id = row.id;
@@ -291,6 +291,7 @@
     },
     {
       label: '删除',
+      enable: true,
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {
@@ -301,7 +302,7 @@
           }
         },
       },
-      auth: AuthEnum.device_delete,
+      auth: AuthEnum.role_delete,
     },
   ]);
 

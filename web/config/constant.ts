@@ -4,7 +4,7 @@
  */
 
 // 应用名
-export const APP_TITLE = '星云';
+export const APP_TITLE = '监控管理平台';
 
 // 本地服务端口
 export const VITE_PORT = 3000;
@@ -21,7 +21,8 @@ export const MOCK_API_BASE_URL = '/mock/api';
 export const MOCK_API_TARGET_URL = 'http://localhost:3000';
 
 // iconfontUrl
-export const ICONFONTURL = '//at.alicdn.com/t/font_3004192_9jmc1z9neiw.js'; // 去色版
+// export const ICONFONTURL = '//at.alicdn.com/t/font_3004192_9jmc1z9neiw.js'; // 去色版
+export const ICONFONTURL = '//at.alicdn.com/t/c/font_4416330_09aqrejobs1.js'; // 去色版
 
 // 包依赖分析
 export const ANALYSIS = true;

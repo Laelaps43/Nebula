@@ -24,6 +24,7 @@ router.beforeEach(async (to: any, _, next) => {
       } else {
         // 没有获取，请求数据
         await permissioStore.fetchAuths();
+        console.log(permissioStore.modules);
         // 过滤权限路由
         const routes = await permissioStore.buildRoutesAction();
         console.log(routes);

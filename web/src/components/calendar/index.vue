@@ -15,7 +15,7 @@
       </template>
     </a-calendar>
     <div style="display: flex; justify-content: right">
-      <a-button @click="toCheckVideo()">查看</a-button>
+      <a-button v-if="hasPermission(AuthEnum.record_details)" @click="toCheckVideo()">查看</a-button>
     </div>
   </a-modal>
   <player
@@ -33,8 +33,15 @@
   import fetchApi from '/@/api/record';
   import { ref } from 'vue';
   import { useMessage } from '/@/hooks/useMessage';
+  import { usePermission } from "/@/hooks/usePermission";
+  import { AuthEnum } from "/@/enums/authEnum";
 
   export default defineComponent({
+    computed: {
+      AuthEnum() {
+        return AuthEnum
+      }
+    },
     props: {
       title: {
         type: String,
@@ -61,6 +68,8 @@
     setup(props, { emit }) {
       const value = ref<string>();
       const isRecorded = ref();
+
+      const { hasPermission } = usePermission();
 
       const initCalendar = () => {
         onPanelChange(dayjs(), 'month');
@@ -162,6 +171,7 @@
         selectOptions,
         playerVisible,
         onPanelChange,
+        hasPermission,
         getDateVideoStatus,
       };
     },

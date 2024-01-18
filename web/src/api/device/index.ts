@@ -4,8 +4,8 @@ import { post, get } from '/@/utils/http';
 enum URL {
   device_page = '/v1/device/list',
   device_update = '/v1/device/update',
-  device_generate = `/v1/device/generate`,
-  device_create = `/v1/device/create`,
+  device_generate = `/v1/device/create/generate`,
+  device_create = `/v1/device/create/create`,
   device_delete = `/v1/device/delete`,
 }
 

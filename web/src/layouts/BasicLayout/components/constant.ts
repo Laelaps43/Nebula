@@ -1,13 +1,21 @@
 export const navs = [
   {
-    icon: 'zhanghaozhongxin',
+    icon: 'qiehuanjiaose',
+    name: '切换角色',
+    auth: '',
+    type: 'switchRole',
+  },
+  {
+    icon: 'zhanghaozhongxinzhanghaoguanli',
     name: '账号中心',
     path: '/sys/account',
     auth: '',
+    type: 'myAccount',
   },
   {
-    icon: 'tuichudenglu_huaban1fuben17',
+    icon: 'tuichudenglu',
     name: '退出登录',
     auth: '',
+    type: 'logout',
   },
 ];

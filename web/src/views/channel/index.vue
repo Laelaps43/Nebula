@@ -185,7 +185,7 @@
   const tableActions = reactive([
     {
       label: '播放',
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.video_play,
       onClick: async (row) => {
         await handlePlay({
           channelId: row.channelId,
@@ -209,11 +209,11 @@
           }
         },
       },
-      auth: AuthEnum.device_delete,
+      auth: AuthEnum.video_record,
     },
     {
       label: '编辑',
-      auth: AuthEnum.device_update,
+      auth: AuthEnum.channel_update,
       onClick: async (row) => {
         formUpdateChannel.value.channelId = row.channelId;
         modalUpdateChannel.visible = true;
@@ -225,7 +225,6 @@
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {
-          console.log('row', row);
           const result = await fetchApi.channel_delete(row.channelId);
           if (result) {
             createMessage.success('删除成功');
@@ -233,7 +232,7 @@
           }
         },
       },
-      auth: AuthEnum.device_delete,
+      auth: AuthEnum.channel_delete,
     },
   ]);
 

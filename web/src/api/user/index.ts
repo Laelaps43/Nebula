@@ -17,6 +17,8 @@ enum URL {
   enable = '/v1/user/enable',
   update = `/v1/user/update`,
   delete = '/v1/user/delete',
+  role = '/v1/user/role',
+  switch = '/v1/user/switchRole',
 }
 
 const login = async (data: ReqParams) => post<ResResult>({ url: URL.login, data });
@@ -33,4 +35,18 @@ const user_update = async (data: UpdateUser) => post<string>({ url: URL.update, 
 
 const user_delete = async (userId: string) => get<string>({ url: URL.delete + `/${userId}` });
 
-export default { login, permission, user_page, user_create, user_enable, user_update, user_delete };
+const user_role = async () => get<any>({ url: URL.role });
+
+const user_switch = async (data: any) => post<string>({ url: URL.switch, data });
+
+export default {
+  login,
+  permission,
+  user_page,
+  user_create,
+  user_enable,
+  user_update,
+  user_delete,
+  user_role,
+  user_switch,
+};

@@ -70,9 +70,7 @@
         player.value = p.player;
       };
       const setValue = (v) => {
-        console.log(v);
         value.value = v;
-        console.log(value.value);
       };
       const changeSelect = (v, _) => {
         value.value = v;

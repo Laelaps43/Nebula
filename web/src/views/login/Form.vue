@@ -1,16 +1,16 @@
 <template>
   <div class="form_box">
     <a-form :model="formModel" :rules="rules" @finish="handleFinish">
-      <p class="text">请输入帐号</p>
+      <p class="text">请输入邮箱</p>
       <a-form-item name="email">
         <a-input
           class="reset-input"
           v-model:value="formModel.email"
-          placeholder="管理员：admin，普通：test"
+          placeholder="邮箱"
         >
           <template #prefix>
             <!-- <user-outlined class="icon" type="user" /> -->
-            <Icon size="24px" type="shoujihaodenglu" class="icon" />
+            <Icon size="24px" type="youxiangdenglu" class="icon" />
           </template>
         </a-input>
       </a-form-item>
@@ -20,11 +20,10 @@
           class="reset-input"
           v-model:value="formModel.password"
           type="password"
-          placeholder="密码为 123456"
-        >
+          placeholder="密码">
           <template #prefix>
             <!-- <lock-outlined class="icon" /> -->
-            <Icon size="24px" type="shurumimadenglu" class="icon" />
+            <Icon size="22px" type="iconqingshurumimadengluye" class="icon" />
           </template>
         </a-input>
       </a-form-item>

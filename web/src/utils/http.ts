@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { API_PREFIX } from '../../config/constant';
 import { ResData } from '../api/global';
-import { getToken } from './auth';
+import { getToken, setToken } from './auth';
 import { useUserStoreWithOut } from '../store/modules/user';
 import { useMessage } from '../hooks/useMessage';
 // import { WhiteList } from './permission';
@@ -48,6 +48,9 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
+    if (response.headers['new-token']) {
+      setToken(response.headers['new-token']);
+    }
     const res = response.data as ResData<any>;
     // 正确状态
     if (res.code === 1) {
@@ -92,6 +95,7 @@ const request = <T = any>(
     return instance.request<T, T>(config);
   }
 };
+
 export function get<T = any>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> {
   return request({ ...config, method: 'GET' }, options);
 }

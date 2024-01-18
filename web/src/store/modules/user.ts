@@ -4,11 +4,15 @@ import { ReqParams } from '/@/api/user/model';
 import fetchApi from '/@/api/user';
 // import { encryptByDES } from '/@/utils/crypto';
 import { getToken, setToken, removeToken } from '/@/utils/auth';
+import { usePermissioStore } from '/@/store/modules/permission';
+import { useSysAccountStore } from '/@/store/modules/sysAccount';
+import { useHomeStore } from '/@/store/modules/home';
 import { router } from '/@/router';
 
 interface UserState {
   token: string;
   auths: string[];
+  roleSet: any[];
 }
 
 export const useUserStore = defineStore({
@@ -18,6 +22,7 @@ export const useUserStore = defineStore({
     token: '',
     // auths
     auths: [],
+    roleSet: [],
   }),
   getters: {
     getToken(): string {
@@ -32,9 +37,16 @@ export const useUserStore = defineStore({
     setAuth(auths: string[]) {
       this.auths = auths;
     },
+    setRoleSet(roleSet: any[]) {
+      this.roleSet = roleSet;
+    },
+    getRoleSet(): any[] {
+      return this.roleSet;
+    },
     resetState() {
       this.token = '';
       this.auths = [];
+      this.roleSet = [];
     },
     /**
      * @description: login
@@ -52,12 +64,34 @@ export const useUserStore = defineStore({
     },
 
     /**
+     * @description：获取用户角色
+     */
+    async fetchUserRole() {
+      const res = await fetchApi.user_role();
+      if (res) {
+        // save token
+        this.setRoleSet(res);
+      }
+      return res;
+    },
+    async switchRole() {
+      this.roleSet = [];
+      this.auths = [];
+      const permissionStore = usePermissioStore();
+      const sysAccountStore = useSysAccountStore();
+      const homeStore = useHomeStore();
+      permissionStore.resetState();
+      sysAccountStore.resetState();
+      homeStore.resetState();
+      router.go(0);
+    },
+    /**
      * @description: logout
      */
     async logout() {
       this.resetState();
       removeToken();
-      router.replace('/login');
+      // router.replace('/login');
       // 路由表重置
       location.reload();
     },

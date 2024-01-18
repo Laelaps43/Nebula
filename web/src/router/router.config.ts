@@ -27,7 +27,7 @@ export const accessRoutes: RouteRecordRaw[] = [
         meta: {
           title: '设备列表',
           keepAlive: true,
-          icon: 'jiedianguanli',
+          icon: 'shexiangtou',
           auth: ['DeviceList'],
         },
       },
@@ -38,7 +38,7 @@ export const accessRoutes: RouteRecordRaw[] = [
         meta: {
           title: '远端录像',
           keepAlive: true,
-          icon: 'rili',
+          icon: 'cidai',
           auth: ['RemoteRecording'],
         },
       },
@@ -49,7 +49,7 @@ export const accessRoutes: RouteRecordRaw[] = [
         meta: {
           title: '角色管理',
           keepAlive: true,
-          icon: 'rili',
+          icon: 'navicon-jsgl',
           auth: ['RoleManagement'],
         },
       },
@@ -60,7 +60,7 @@ export const accessRoutes: RouteRecordRaw[] = [
         meta: {
           title: '用户管理',
           keepAlive: true,
-          icon: 'rili',
+          icon: 'guanliyuan_jiaoseguanli',
           auth: ['UserManagement'],
         },
       },

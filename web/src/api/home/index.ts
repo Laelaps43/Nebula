@@ -2,7 +2,7 @@ import { get } from '/@/utils/http';
 import { OverViewResult, ServerInfoResult, SystemInfoResult } from '/@/api/home/model';
 
 enum URL {
-  overView = '/v1/home/overview',
+  overView = '/v1/home/overview/info',
   systemInfo = '/v1/home/system/info',
   serverInfo = `/v1/home/server/info`,
 }

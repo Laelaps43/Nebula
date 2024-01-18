@@ -10,8 +10,8 @@ import { get, post } from '/@/utils/http';
 
 enum URL {
   channel_page = '/v1/channel/list',
-  channel_generate = `/v1/channel/generate`,
-  channel_create = `/v1/channel/create`,
+  channel_generate = `/v1/channel/create/generate`,
+  channel_create = `/v1/channel/create/create`,
   channel_update = `/v1/channel/update`,
   channel_delete = `/v1/channel/delete`,
   channel_play = `/v1/video/play`,
