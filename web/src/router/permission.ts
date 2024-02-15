@@ -12,6 +12,7 @@ const whiteList = ['/login']; // no redirect whitelist
 
 router.beforeEach(async (to: any, _, next) => {
   const hasToken = getToken();
+  console.log(hasToken);
   if (hasToken) {
     // 已登录
     if (to.path === '/login') {

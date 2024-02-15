@@ -57,16 +57,17 @@ instance.interceptors.response.use(
       return res.data || true;
     }
 
-    // 登录失效
-    if (res.code === -1) {
-      useUserStoreWithOut().logout();
-    }
-
     // 异常
     createMessage.error(res.message);
     return undefined;
   },
   (error) => {
+    console.log(error.response);
+    // 未登录
+    if (error.response && error.response.status === 401) {
+      createMessage.error('请重新登录');
+      useUserStoreWithOut().logout();
+    }
     console.log('err' + error); // for debug
     // 没权限时，不再重复提示
     // TODO: 异常处理的时候，返回的消息
