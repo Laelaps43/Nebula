@@ -3,7 +3,7 @@ server:
   port: 8081  # web运行的端口号
   router-prefix: "/api/v1"  # 路由前缀
   login-max-num:  "6" # 最大登录次数
-  login-timeout:  "100m"
+  login-timeout:  "60m"
   cache-type: redis # 指定缓存
   db-type: mysql
 
@@ -18,13 +18,15 @@ sip:
   channel-prefix: "37070000081318"       # 通道前缀
 
 media:
-  address: "192.168.2.214"
-  media-server-id: "192.168.2.214"
+  address: "192.168.2.12"
+  media-server-id: "192.168.2.15"
   rtp: "10000"  # media 接收GB28181RTP流端口
   restful: 8080  # media 服务器restfulapi地址
   secret: "admin@nebula.com" # zlm secret key 用来请求zlm接口验证
   rtsp-port: 8554 # rtsp的端口
   rtmp-port: 1935 # rtmp的端口
+  record-path: "/Users/laelaps/Test/Test3"
+  storage-threshold: 47
 
 jwt:
   signing-key: laelaps
@@ -35,8 +37,8 @@ jwt:
 zap:
   level:        debug
   directory:    log
-  max-size:      "500"
-  max-backups:   "3"
+  max-size:      "2"
+  max-backups:   "10"
   max-age:       "28"
   compress:     true
   login-console: true

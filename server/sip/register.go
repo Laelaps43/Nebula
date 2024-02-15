@@ -98,11 +98,17 @@ func Register(req sip.Request, tx sip.ServerTransaction) {
 			global.Logger.Info("设备注销失败，设备不存在系统中。", zap.String("device Id", fromInfo.DeviceId))
 			return
 		}
+		response := sip.NewResponseFromRequest("", req, http.StatusOK, http.StatusText(http.StatusOK), "")
+		_ = tx.Respond(response)
+
 		device.Status = helper.DeviceOffline
 		global.Logger.Info("设备注销", zap.String("device Id", device.DeviceId))
 		_ = device.DeviceUpdate()
-		response := sip.NewResponseFromRequest("", req, http.StatusOK, http.StatusText(http.StatusOK), "")
-		_ = tx.Respond(response)
+		// 更新通道状态以及录像状态
+		deviceChannel := system.DeviceChannel{
+			DeviceId: device.DeviceId,
+		}
+		deviceChannel.UpdateChannelStatusByDeviceId()
 		return
 	}
 

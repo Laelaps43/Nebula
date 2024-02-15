@@ -33,6 +33,7 @@ func (j *JWT) CreateClaims(user *system.SysUser, expire time.Time) jwt.CustomCla
 	return jwt.CustomClaims{
 		ID:       user.ID,
 		UserName: user.UserName,
+		RoleId:   user.RoleID,
 		RegisteredClaims: jwt4.RegisteredClaims{
 			Audience:  jwt4.ClaimStrings{"Nebula"},     // 受众
 			NotBefore: jwt4.NewNumericDate(time.Now()), // 生效时间

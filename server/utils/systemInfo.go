@@ -30,15 +30,28 @@ func GetSystemInfo() {
 
 		// 硬盘占比
 		//fmt.Println("-----------Disk-----------------")
-		//usage, _ := disk.Usage("/")
-		partitions, _ := disk.Partitions(true)
-		for _, partition := range partitions {
-			if partition.Device == "/dev/disk3s1" {
-				usage, _ := disk.Usage(partition.Mountpoint)
-				global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
-					usage.UsedPercent))
+		stat, err := disk.Usage(global.CONFIG.Media.RecordPath)
+		if err == nil {
+			//fmt.Println("----------")
+			//fmt.Println(stat.Path)
+			//fmt.Println(stat.Free)
+			//fmt.Println(stat.UsedPercent)
+			//fmt.Println(stat.Total)
+			global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
+				stat.UsedPercent))
+			if stat.UsedPercent > 95 {
+				// 大于百分之95，需要清理
+				go ClearRecordVideo()
 			}
 		}
+		//partitions, _ := disk.Partitions(true)
+		//for _, partition := range partitions {
+		//	if partition.Device == "/dev/disk3s1" {
+		//		usage, _ := disk.Usage(partition.Mountpoint)
+		//		global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
+		//			usage.UsedPercent))
+		//	}
+		//}
 		//global.DiskList = append(global.DiskList[1:60], fmt.Sprintf("%.2f", usage.UsedPercent))
 		//fmt.Println(global.DiskList)
 

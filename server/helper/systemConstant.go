@@ -65,6 +65,9 @@ const (
 
 	// 系统设备默认是传输协议
 	DefaultTransPort = "UDP"
+
+	// 系统默认最大删除次数
+	MaxDeleteCount = 10
 )
 
 const (

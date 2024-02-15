@@ -14,7 +14,7 @@ func (c *ChannelRouter) InitChannelRoute(group *gin.RouterGroup) {
 	{
 		channelRouterGroup.POST("list", channelApi.GetAllChannels)
 		channelRouterGroup.GET("create/generate", channelApi.GenerateChannel)
-		channelRouterGroup.POST("create", channelApi.CreateChannel)
+		channelRouterGroup.POST("create/create", channelApi.CreateChannel)
 		channelRouterGroup.POST("update", channelApi.UpdateChannel)
 		channelRouterGroup.GET("delete/:channelId", channelApi.DeleteChannel)
 	}

@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"nebula.xyz/global"
 	"nebula.xyz/model/request"
+	"nebula.xyz/model/response"
 	"nebula.xyz/model/system"
 	"nebula.xyz/utils"
 )
@@ -191,6 +192,49 @@ func (u *UserService) EditUser(user request.EditUser) error {
 			global.Logger.Error("修改错误", zap.Error(err))
 			return errors.New("修改错误")
 		}
+	}
+	return nil
+}
+
+func (u *UserService) UpdateLoginAddress(ip string, id uint) {
+	err := global.DB.Model(&system.SysUser{}).Where("id = ?", id).Update("last_login_address", &ip).Error
+	if err != nil {
+		global.Logger.Error(fmt.Sprintf("记录id%d登录地址%s失败", id, ip))
+	}
+}
+
+// 当前登入的角色Id，以及用户Id
+func (u *UserService) GetUserRole(roleId uint, userId uint) ([]response.UserRole, error) {
+	var user system.SysUser
+	err := global.DB.Model(&system.SysUser{}).Preload("Roles").First(&user).Error
+	if err != nil {
+		global.Logger.Error("获取用户角色失败", zap.Error(err))
+		return nil, errors.New("获取角色失败")
+	}
+	roles := make([]response.UserRole, 0)
+	for _, role := range user.Roles {
+		tmp := response.UserRole{
+			Label: role.Name,
+			Value: role.ID,
+			Hold:  false,
+		}
+		if role.ID == roleId {
+			tmp.Hold = true
+		}
+		roles = append(roles, tmp)
+	}
+	return roles, nil
+}
+
+func (u *UserService) SwitchRole(roleId uint, userId uint) error {
+	var count int64
+	err := global.DB.Model(&system.SysUserRole{}).
+		Where("sys_user_id = ? AND sys_role_id = ?", userId, roleId).Count(&count).Error
+	if err != nil {
+		return errors.New("切换失败")
+	}
+	if count == 0 {
+		return errors.New("切换失败")
 	}
 	return nil
 }

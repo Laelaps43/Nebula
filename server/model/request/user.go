@@ -17,3 +17,7 @@ type EditUser struct {
 	UserName string `json:"username"`
 	Password string `json:"password"`
 }
+
+type SwitchRole struct {
+	RoleId uint `json:"roleId"`
+}

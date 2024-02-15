@@ -11,6 +11,7 @@ type Cache interface {
 	Set(key string, value any, expire time.Duration) (any, error)
 	DeleteByKey(keys ...string) error
 	Increment(key string) (int64, error)
+	Expire(key string, expire time.Duration) (bool, error)
 }
 
 // CacheError 自定义错误类型，表示缓存中不存在指定key的缓存

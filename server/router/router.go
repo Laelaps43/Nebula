@@ -33,6 +33,13 @@ func Routers() *gin.Engine {
 		zlmRouter.InitZlmHookRouter(ZLMediaKitGroup)
 	}
 
+	// 权限路由
+	AuthorizationGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
+	AuthorizationGroup.Use(middleware.JWTAuth())
+	{
+		webRouter.InitUserAuthorizationRouter(AuthorizationGroup)
+	}
+
 	// 鉴定路由
 	PrivateGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
 	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
