@@ -221,8 +221,7 @@ func sipPlayPush(
 		Params:  nil,
 	})
 	global.Logger.Info("发送ACK请求")
-	//err = Server.Send(ack)
-	_, err = Server.Request(ack)
+	err = Server.Send(ack)
 	if err != nil {
 		global.Logger.Error("发送ACK请求失败", zap.Error(err))
 	}

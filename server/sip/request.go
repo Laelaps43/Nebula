@@ -3,6 +3,7 @@ package sip
 import (
 	"fmt"
 	"github.com/ghettovoice/gosip/sip"
+	"nebula.xyz/global"
 	"nebula.xyz/model/system"
 	"nebula.xyz/utils"
 	"strconv"
@@ -22,6 +23,7 @@ func createMessageRequest(
 	requestBuilder := sip.NewRequestBuilder()
 	requestBuilder.SetFrom(newFromAddress(newParams(map[string]string{"tag": utils.RandString(32)})))
 	to := newToAddress(&device)
+	global.Logger.Debug("创建请求，响应地址为" + to.Uri.Host())
 	requestBuilder.SetTo(to)
 	requestBuilder.SetRecipient(to.Uri)
 	requestBuilder.AddVia(newVia(&device))
