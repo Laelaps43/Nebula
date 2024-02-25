@@ -281,7 +281,8 @@
   const handlePlay = async (payload: VideoRequestPayload) => {
     const res = await fetchApi.video_play(payload);
     if (res) {
-      videoOptions.value.src = res.HTTP;
+      videoOptions.value.src =
+        'https://' + window.location.hostname + ':' + window.location.port + res.HTTP;
       playVisible.value = true;
     } else {
       createMessage.error('点播失败');

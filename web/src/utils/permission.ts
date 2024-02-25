@@ -36,9 +36,9 @@ export const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]): Ro
       res.push(route);
     } else {
       // 找到roles 和 auth之间的交集
-      console.log(roles);
-      console.log(auth);
-      console.log(intersection(roles, auth));
+      // console.log(roles);
+      // console.log(auth);
+      // console.log(intersection(roles, auth));
       if (intersection(roles, auth).length > 0) {
         if (route.children) {
           route.children = filterAsyncRoutes(route.children, roles);

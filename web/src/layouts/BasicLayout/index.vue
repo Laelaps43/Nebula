@@ -58,7 +58,7 @@
 
   const routeMeta = computed(() => {
     var data = router.currentRoute.value.meta;
-    console.log(data);
+    // console.log(data);
     return data;
   });
 
