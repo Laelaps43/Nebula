@@ -10,4 +10,5 @@ type Media struct {
 	MediaServerId    string  `mapstructure:"media-server-id" yaml:"media-server-id"`
 	RecordPath       string  `mapstructure:"record-path" yaml:"record-path"`
 	StorageThreshold float64 `mapstructure:"storage-threshold" yaml:"storage-threshold"`
+	Domain           string  `mapstructure:domain yaml:"domain"`
 }

@@ -27,6 +27,7 @@ media:
   rtmp-port: 1935 # rtmp的端口
   record-path: "/Users/laelaps/Test/Test3"
   storage-threshold: 47
+  domain: "home.zenfile.cloud"
 
 jwt:
   signing-key: laelaps

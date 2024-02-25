@@ -181,7 +181,7 @@ func (r *RecordServer) GetRecordPlay(id string, stream string) (string, error) {
 	zlmRecord := response.ZLMRecord{}
 	_ = json.Unmarshal(ZLMResponse, &zlmRecord)
 	if zlmRecord.Code == 0 {
-		return fmt.Sprintf("http://%s:%s/rtp/%s/hls.m3u8", global.MediaServer.GetAddress(), global.MediaServer.GetRestful(), streamId), nil
+		return fmt.Sprintf("/rtp/%s/hls.m3u8", streamId), nil
 	}
 	return "", errors.New("播播放错误")
 }
