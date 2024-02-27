@@ -25,7 +25,7 @@ media:
   secret: "admin@nebula.com" # zlm secret key 用来请求zlm接口验证
   rtsp-port: 8554 # rtsp的端口
   rtmp-port: 1935 # rtmp的端口
-  record-path: "/Users/laelaps/Test/Test3"
+  record-path: "/media"
   storage-threshold: 47
   domain: "home.zenfile.cloud"
 
