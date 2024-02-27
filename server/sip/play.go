@@ -85,12 +85,17 @@ func Play(payload request.VideoRequestPayload) (*system.Stream, error) {
 	}
 	global.Logger.Info("点播成功......")
 
-	//media := global.CONFIG.Media
+	media := global.CONFIG.Media
+	address := media.Address
+	if media.Domain != "" {
+		address = media.Domain
+	}
+	global.Logger.Info("ZLM请求地址为", zap.String("domain", address))
 	zlmId := utils.StreamToHex(stream.StreamId)
-	stream.HTTP = fmt.Sprintf("/rtp/%s/hls.m3u8", zlmId)
-	stream.RTMP = fmt.Sprintf("/rtp/%s", zlmId)
-	stream.RTSP = fmt.Sprintf("/rtp/%s", zlmId)
-	stream.WSFLV = fmt.Sprintf("/rtp/%s.live.flv", zlmId)
+	stream.HTTP = fmt.Sprintf("https://%s:%s/rtp/%s/hls.m3u8", address, "44344", zlmId)
+	stream.RTMP = fmt.Sprintf("rtmp://%s:%s/rtp/%s", media.Address, media.RTMPPort, zlmId)
+	stream.RTSP = fmt.Sprintf("rtsp://%s:%s/rtp/%s", media.Address, media.RTSPPort, zlmId)
+	stream.WSFLV = fmt.Sprintf("ws://%s:%s/rtp/%s.live.flv", media.Address, media.Restful, zlmId)
 	global.Logger.Info("ab", zap.Strings("直播流", []string{stream.HTTP, stream.RTMP, stream.RTSP, stream.WSFLV}))
 	err = stream.Update()
 	if err != nil {
