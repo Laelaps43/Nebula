@@ -90,3 +90,7 @@ func (m *MediaServer) GetMediaServerId() string {
 func (m *MediaServer) GetDomain() string {
 	return m.Domain
 }
+
+func (m *MediaServer) SetDomain(domain string) {
+	m.Domain = domain
+}

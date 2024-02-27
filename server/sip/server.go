@@ -101,6 +101,7 @@ func InitSipServer() {
 		server.SetRTMPPort(global.CONFIG.Media.RTMPPort)
 		server.SetSecret(global.CONFIG.Media.Secret)
 		server.SetMediaServerId(global.CONFIG.Media.MediaServerId)
+		server.SetDomain(global.CONFIG.Media.Domain)
 		global.MediaServer = &server
 		_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
 		if err != nil {
