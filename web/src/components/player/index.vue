@@ -16,16 +16,16 @@
           :options="selectOptions"
         />
       </div>
-      <div style="width: 100%; display: flex; justify-content: center">
-        <video-player
-          :ref="(el) => (playerRef = el)"
-          :src="options.src"
-          :preload="'auto'"
-          :autoplay="true"
-          :width="1100"
-          controls
-          @mounted="videoPause"
-        />
+      <div id="mse" style="width: 100%; display: flex; justify-content: center">
+        <!--        <video-player-->
+        <!--          :ref="(el) => (playerRef = el)"-->
+        <!--          :src="options.src"-->
+        <!--          :preload="'auto'"-->
+        <!--          :autoplay="true"-->
+        <!--          :width="1100"-->
+        <!--          controls-->
+        <!--          @mounted="videoPause"-->
+        <!--        />-->
       </div>
     </div>
   </a-modal>
@@ -63,7 +63,11 @@
         ctx.emit('cancel');
       };
 
-      const player = ref(null);
+      const player = new Player({
+        id: 'mse',
+        url: 'http://s2.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4',
+      });
+      // const player = ref(null);
 
       const value = ref();
       const videoPause = (p: any) => {

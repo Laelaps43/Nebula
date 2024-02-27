@@ -125,8 +125,7 @@
       };
       const playVideoRecord = (id: number) => {
         fetchApi.recordPlay(id, props.stream).then((res) => {
-          videoOptions.value.src =
-            'https://' + window.location.hostname + ':' + window.location.port + res;
+          videoOptions.value.src = res
         });
       };
 
