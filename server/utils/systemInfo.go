@@ -26,11 +26,11 @@ func GetSystemInfo() {
 		// 内存百分比
 		//fmt.Println("-----------MEM-----------------")
 		memory, err := mem.VirtualMemory()
-		fmt.Println(memory)
+		//fmt.Println(memory)
 		if err != nil {
 			global.Logger.Error("获取内存信息错误", zap.Error(err))
 		}
-		global.Logger.Info("内存信息", zap.Float64("内存使用量:", memory.UsedPercent))
+		//global.Logger.Info("内存信息", zap.Float64("内存使用量:", memory.UsedPercent))
 		global.Info.MemList = append(global.Info.MemList[1:60], fmt.Sprintf("%.2f", memory.UsedPercent))
 		//fmt.Println(global.MemList)
 
@@ -39,10 +39,10 @@ func GetSystemInfo() {
 		stat, err := disk.Usage(global.CONFIG.Media.RecordPath)
 		if err == nil {
 			//fmt.Println("----------")
-			fmt.Println(stat.Path)
-			fmt.Println(stat.Free)
-			fmt.Println(stat.UsedPercent)
-			fmt.Println(stat.Total)
+			//fmt.Println(stat.Path)
+			//fmt.Println(stat.Free)
+			//fmt.Println(stat.UsedPercent)
+			//fmt.Println(stat.Total)
 			global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
 				stat.UsedPercent))
 			if stat.UsedPercent > 95 {
@@ -63,9 +63,9 @@ func GetSystemInfo() {
 		//global.DiskList = append(global.DiskList[1:60], fmt.Sprintf("%.2f", usage.UsedPercent))
 		//fmt.Println(global.DiskList)
 
-		fmt.Println("-----------Net-----------------")
+		//fmt.Println("-----------Net-----------------")
 		netStatus, err := net.IOCounters(true)
-		fmt.Println(netStatus)
+		//fmt.Println(netStatus)
 		if err != nil {
 			global.Logger.Error("获取网络信息错误", zap.Error(err))
 		}
