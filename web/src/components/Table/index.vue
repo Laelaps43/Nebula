@@ -23,8 +23,8 @@
     >
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.key === 'status'">
-          <a-tag :bordered="false" :color="getStatusColor(record.status || record.enable || record.isRecording)"
-            >{{ getStatusLabel(record.status || record.enable || record.isRecording) }}
+          <a-tag :bordered="false" :color="getStatusColor(record)"
+            >{{ getStatusLabel(record) }}
           </a-tag>
         </template>
         <template v-if="column.key === 'role'">
@@ -209,13 +209,15 @@
       };
 
       const getStatusLabel = computed(() => {
-        return (status: any) => {
+        return (record: any) => {
+          let status = record.status || record.enable || record.isRecording || 0;
           return (props.statusList as []).find((item) => item?.status == status)?.label || '-';
         };
       });
       const getStatusColor = computed(() => {
-        return (status: any) => {
-          return (props.statusList as []).find((item) => item?.status == status)?.color || '-';
+        return (record: any) => {
+          let status = record.status || record.enable || record.isRecording || 0;
+          return (props.statusList as []).find((item: any) => item?.status == status)?.color || '-';
         };
       });
 

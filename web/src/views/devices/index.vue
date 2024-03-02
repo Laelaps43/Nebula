@@ -39,7 +39,7 @@
         <a-form-item label="名称:" name="name">
           <a-input v-model:value="formCreateDevice.name" placeholder="请输入设备名称" />
         </a-form-item>
-        <a-form-item label="端口" name="port">
+        <a-form-item v-if="false" label="端口" name="port">
           <a-input-number
             v-model:value="formCreateDevice.port"
             :controls="true"
@@ -126,7 +126,7 @@
   }> = ref({
     deviceId: '',
     name: '',
-    port: 65535,
+    port: 5060,
   });
 
   const tableActions = reactive([

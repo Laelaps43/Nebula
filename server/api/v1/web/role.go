@@ -84,7 +84,7 @@ func (r RoleApi) DeleteRole(ctx *gin.Context) {
 
 	err = roleService.DeleteRole(uint(roleIdUint))
 	if err != nil {
-		model.ErrorWithMessage("删除角色"+err.Error(), ctx)
+		model.ErrorWithMessage(err.Error(), ctx)
 		return
 	}
 

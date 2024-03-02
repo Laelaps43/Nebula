@@ -35,7 +35,7 @@ func GetSystemInfo() {
 		//fmt.Println(global.MemList)
 
 		// 硬盘占比
-		fmt.Println("-----------Disk-----------------")
+		//fmt.Println("-----------Disk-----------------")
 		stat, err := disk.Usage(global.CONFIG.Media.RecordPath)
 		if err == nil {
 			//fmt.Println("----------")

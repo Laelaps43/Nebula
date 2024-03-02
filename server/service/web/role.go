@@ -100,7 +100,7 @@ func (s *RoleService) DeleteRole(id uint) error {
 	err = global.DB.Model(&system.SysRole{}).Where("id = ?", id).Delete(role).Error
 	if err != nil {
 		global.Logger.Error("删除角色失败", zap.Error(err))
-		return errors.New("删除角色设备")
+		return errors.New("删除角色失败")
 	}
 	return nil
 }

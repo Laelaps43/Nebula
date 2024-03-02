@@ -11,7 +11,6 @@
       :url="fetchApi.channel_page"
       :columns="columns"
       :hiddenFilter="false"
-      :button="tableFilterButton"
       :actions="tableActions"
       :status-list="ChannelStatusList"
       :page-param="pageParam"
@@ -219,21 +218,21 @@
         modalUpdateChannel.visible = true;
       },
     },
-    {
-      label: '删除',
-      enable: true,
-      popConfirm: {
-        title: '确认删除吗？',
-        onConfirm: async (row) => {
-          const result = await fetchApi.channel_delete(row.channelId);
-          if (result) {
-            createMessage.success('删除成功');
-            refresh();
-          }
-        },
-      },
-      auth: AuthEnum.channel_delete,
-    },
+    // {
+    //   label: '删除',
+    //   enable: true,
+    //   popConfirm: {
+    //     title: '确认删除吗？',
+    //     onConfirm: async (row) => {
+    //       const result = await fetchApi.channel_delete(row.channelId);
+    //       if (result) {
+    //         createMessage.success('删除成功');
+    //         refresh();
+    //       }
+    //     },
+    //   },
+    //   auth: AuthEnum.channel_delete,
+    // },
   ]);
 
   const getGenerateChannelId = async () => {

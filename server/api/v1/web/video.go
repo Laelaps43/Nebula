@@ -85,7 +85,7 @@ func (v *VideoApi) RecordVideo(ctx *gin.Context) {
 	}
 	if device.Status != helper.DeviceOnline || channel.Status != helper.ChannelStatusON {
 		global.Logger.Info("设备或通道离线")
-		model.ErrorWithMessage("设备或通道离线", nil)
+		model.ErrorWithMessage("设备或通道离线", ctx)
 		return
 	}
 

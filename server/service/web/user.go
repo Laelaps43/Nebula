@@ -53,7 +53,7 @@ func (u *UserService) GetUserInfoPagination(pagination request.Pagination) (user
 func (u *UserService) CreateUser(create request.UserCreate) error {
 	// 1. 判断邮箱是否存在
 	user := system.SysUser{}
-	if !errors.Is(global.DB.Model(&system.SysUser{}).Where("email = ?", create.Email).Find(&user).Error, gorm.ErrRecordNotFound) {
+	if errors.Is(global.DB.Model(&system.SysUser{}).Where("email = ?", create.Email).Find(&user).Error, gorm.ErrRecordNotFound) {
 		global.Logger.Error("该邮箱已被注册")
 		return errors.New("该邮箱已被注册")
 	}
