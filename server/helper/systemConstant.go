@@ -46,8 +46,6 @@ const (
 
 	RecordMaxSecond = 0
 
-	RecordPath = "/opt/media/video"
-
 	// 设备状态
 	DeviceOnline  = "1"
 	DeviceOffline = "0"
