@@ -23,5 +23,6 @@ func main() {
 	sip.InitSipServer()
 	global.Logger.Info("获取系统信息.....")
 	go utils.GetSystemInfo()
+	go utils.GetSystemInfo()
 	router.RunServer()
 }
