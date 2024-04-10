@@ -127,3 +127,21 @@ func (z *ZlmHookApi) OnRecordMp4(ctx *gin.Context) {
 	})
 	return
 }
+
+func (z *ZlmHookApi) OnStreamNotFound(ctx *gin.Context) {
+	var streamNotFound zlm.StreamNotFound
+	err := ctx.ShouldBindJSON(&streamNotFound)
+	if err != nil {
+		global.Logger.Error("触发流未找到失败", zap.Error(err))
+		ctx.JSON(http.StatusOK, response.ZLMHookResponse{
+			Code: helper.ZLMeidaHookFail,
+			Msg:  helper.ZLMeidaHookFailMessage,
+		})
+		return
+	}
+	fmt.Println(streamNotFound)
+	ctx.JSON(http.StatusOK, response.ZLMHookResponse{
+		Code: helper.ZLMeidaHookSuccess,
+		Msg:  helper.ZLMeidaHookSuccessMessage,
+	})
+}

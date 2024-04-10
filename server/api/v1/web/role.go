@@ -84,9 +84,40 @@ func (r RoleApi) DeleteRole(ctx *gin.Context) {
 
 	err = roleService.DeleteRole(uint(roleIdUint))
 	if err != nil {
-		model.ErrorWithMessage("删除角色"+err.Error(), ctx)
+		model.ErrorWithMessage(err.Error(), ctx)
 		return
 	}
 
 	model.OKWithMessage("删除成功", ctx)
+}
+
+func (r RoleApi) GetAllPermission(ctx *gin.Context) {
+	roleId := ctx.Param("roleId")
+
+	roleIdUint, err := strconv.ParseUint(roleId, 10, 64)
+	if err != nil {
+		model.ErrorWithMessage("Invalid role ID", ctx)
+		return
+	}
+	permission, err := roleService.GetAllPermission(roleIdUint)
+	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
+		return
+	}
+	model.OkWithDetailed(permission, "获取成功", ctx)
+}
+
+func (r RoleApi) UpdatePermission(ctx *gin.Context) {
+	var permission request.UpdatePermission
+	err := ctx.ShouldBindJSON(&permission)
+	if err != nil {
+		model.ErrorWithMessage("绑定数据错误", ctx)
+		return
+	}
+	err = roleService.UpdatePermission(permission)
+	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
+		return
+	}
+	model.OKWithMessage("更新成功", ctx)
 }

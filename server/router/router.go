@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"nebula.xyz/global"
+	"nebula.xyz/middleware"
 	"nebula.xyz/router/web"
 )
 
@@ -19,13 +20,11 @@ func Routers() *gin.Engine {
 	PublicGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
 	{
 		webRouter.InitHelloRouter(PublicGroup)
-		webRouter.InitHomeRouter(PublicGroup)
 		webRouter.InitRoleRouter(PublicGroup)
 		webRouter.InitUserRouter(PublicGroup)
 		webRouter.InitVideoRouter(PublicGroup)
 		webRouter.InitDeviceRouter(PublicGroup)
 		webRouter.InitChannelRoute(PublicGroup)
-		webRouter.InitSystemRouter(PublicGroup)
 		webRouter.InitRecordRouter(PublicGroup)
 	}
 	// ZLM webhook路由
@@ -34,11 +33,20 @@ func Routers() *gin.Engine {
 		zlmRouter.InitZlmHookRouter(ZLMediaKitGroup)
 	}
 
+	// 权限路由
+	AuthorizationGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
+	AuthorizationGroup.Use(middleware.JWTAuth())
+	{
+		webRouter.InitUserAuthorizationRouter(AuthorizationGroup)
+	}
+
 	// 鉴定路由
-	//PrivateGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix).Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
-	//{
-	//
-	//}
+	PrivateGroup := Router.Group(global.CONFIG.SERVER.RouterPrefix)
+	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	{
+
+		webRouter.InitHomeRouter(PrivateGroup)
+	}
 
 	global.Logger.Info("路由初始化成功！")
 	return Router

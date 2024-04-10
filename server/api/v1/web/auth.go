@@ -22,25 +22,25 @@ func (u *UserApi) DoLogin(c *gin.Context) {
 	var userRequest sysRequest.Login // 登录信息
 
 	err := c.ShouldBindJSON(&userRequest) // 获取到前端传来的数据
-	//clientIp := c.ClientIP()
 	if err != nil {
 		model.ErrorWithMessage("帐号错误或者密码错误！", c)
 		return
 	}
 	global.Logger.Info("info", zap.String("email", userRequest.Email), zap.String("pass", userRequest.Password))
 
-	//TODO 这里需要去判断穿过来的时间准确性，帐号密码不为空
+	if userRequest.Email == "" || userRequest.Password == "" {
+		model.ErrorWithMessage("帐号错误或者密码为空", c)
+		return
+	}
 
 	// 从设置回去最大次数，防止爆次数
 	loginNum := global.CONFIG.SERVER.LoginMaxNum
 	// TODO 规定时间登录次数
-	// loginTimeout := global.CONFING.SERVER.LoginTimeout
 
 	//TODO 判断是否在黑名单内
 
 	//TODO 需要不需要去考虑规定时间内，最大的请求次数，或者是对某一个操作的请求次数
 
-	//TODO 登录认证
 	uRequest := &system.SysUser{Email: userRequest.Email, PassWord: userRequest.Password}
 	user, err := userService.Login(uRequest)
 	if err != nil {
@@ -57,13 +57,18 @@ func (u *UserApi) DoLogin(c *gin.Context) {
 	}
 
 	// 每次登录一次加入一次，返回加入之后的登录次数
-	//TODO 这里应该带个超时时间
 	if maxNum, err := global.CACHE.Increment(strconv.Itoa(int(user.ID))); err != nil {
 		global.Logger.Error("登录错误！", zap.String("Login Error", err.Error()))
 		model.ServerError(c)
 		return
 	} else {
 		if maxNum > int64(loginNum) {
+			expireTime, _ := utils.ParseExpireTime(global.CONFIG.SERVER.LoginTimeout)
+			if _, err = global.CACHE.Expire(strconv.FormatUint(uint64(user.ID), 10), expireTime); err != nil {
+				global.Logger.Error("设置登入超时时间错误", zap.Error(err))
+				model.ServerError(c)
+				return
+			}
 			global.Logger.Info("登录超过最大次数", zap.Int("LoginMaxNum", int(loginNum)), zap.Int64("NowMaxLoginNum", maxNum))
 			model.ErrorWithMessage("登录过多，请稍候再试！", c)
 			return
@@ -71,9 +76,8 @@ func (u *UserApi) DoLogin(c *gin.Context) {
 	}
 	global.Logger.Info("验证成功，正在生成token.....")
 
-	global.Logger.Error("user" + strconv.Itoa(int(user.ID)) + user.Email)
+	global.Logger.Debug("user" + strconv.Itoa(int(user.ID)) + user.Email)
 	u.TokenGen(c, user)
-
 }
 
 // TokenGen 生成Token
@@ -118,5 +122,6 @@ func (u *UserApi) TokenGen(c *gin.Context, user *system.SysUser) {
 		Token:     token,
 		ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
 	}, "登录成功", c)
+	go userService.UpdateLoginAddress(c.ClientIP(), user.ID)
 	global.Logger.Info("登录成功", zap.String("email", user.Email))
 }

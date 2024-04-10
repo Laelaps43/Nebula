@@ -2,12 +2,15 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
+	jwt4 "github.com/golang-jwt/jwt/v4"
 	"go.uber.org/zap"
 	"nebula.xyz/global"
 	"nebula.xyz/model"
 	"nebula.xyz/model/request"
 	resp "nebula.xyz/model/response"
 	"nebula.xyz/utils"
+	"strconv"
+	"time"
 )
 
 // 用户相关API
@@ -144,4 +147,48 @@ func (u *UserApi) EditUser(ctx *gin.Context) {
 		model.ErrorWithMessage(err.Error(), ctx)
 	}
 	model.OKWithMessage("修改成功", ctx)
+}
+
+func (u *UserApi) GetUsrRole(ctx *gin.Context) {
+	claims, err := utils.GetClaims(ctx)
+	if err != nil {
+		model.ErrorWithMessage("获取角色错误", ctx)
+		return
+	}
+	role, err := userService.GetUserRole(claims.RoleId, claims.ID)
+	if err != nil {
+		model.ErrorWithMessage("获取角色错误", ctx)
+		return
+	}
+	model.OkWithDetailed(role, "获取成功", ctx)
+}
+
+func (u *UserApi) SwitchRole(ctx *gin.Context) {
+	var switchRole request.SwitchRole
+	err := ctx.ShouldBindJSON(&switchRole)
+	if err != nil {
+		model.ErrorWithMessage("切换角色失败", ctx)
+		return
+	}
+	claims, err := utils.GetClaims(ctx)
+	token := ctx.Request.Header.Get("Authorization")
+	err = userService.SwitchRole(switchRole.RoleId, claims.ID)
+	if err != nil {
+		model.ErrorWithMessage(err.Error(), ctx)
+		return
+	}
+	claims.RoleId = switchRole.RoleId
+	j := utils.NewJWT()
+	dr, _ := utils.ParseExpireTime(global.CONFIG.JWT.JwtExpire)
+	claims.ExpiresAt = jwt4.NewNumericDate(time.Now().Add(dr))
+	newToken, _ := j.CreateTokenByOlderToken(token, claims)
+	ctx.Header("new-token", newToken)
+	ctx.Header("new-expire-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
+	// 将新Token保存到Cache中，替换以前的Token
+	if _, err := jwtService.SetJWT(token, strconv.Itoa(int(claims.ID)), dr); err != nil {
+		global.Logger.Error("保存Token失败！", zap.Error(err))
+		model.ErrorWithMessage("登录失败，请稍候再试！", ctx)
+		return
+	}
+	model.OKWithMessage("切换成功", ctx)
 }

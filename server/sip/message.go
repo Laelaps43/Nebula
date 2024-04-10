@@ -5,11 +5,15 @@ import (
 	"errors"
 	"github.com/ghettovoice/gosip/sip"
 	"go.uber.org/zap"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 	"gorm.io/gorm"
+	"io"
 	"nebula.xyz/global"
 	sb "nebula.xyz/model/sip"
 	"nebula.xyz/model/system"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -25,10 +29,21 @@ func Message(request sip.Request, transaction sip.ServerTransaction) {
 	body := request.Body()
 
 	message := &sb.SipMessage{}
-
-	if err := xml.Unmarshal([]byte(body), message); err != nil {
-		global.Logger.Error("解析MESSAGE-Body失败", zap.Error(err))
-		return
+	if strings.Contains(body, "GB2312") {
+		decoder := xml.NewDecoder(strings.NewReader(body))
+		decoder.CharsetReader = func(charset string, input io.Reader) (io.Reader, error) {
+			return transform.NewReader(input, simplifiedchinese.HZGB2312.NewDecoder()), nil
+		}
+		err := decoder.Decode(message)
+		if err != nil {
+			global.Logger.Error("解析MESSAGE-Body失败", zap.Error(err))
+			return
+		}
+	} else {
+		if err := xml.Unmarshal([]byte(body), message); err != nil {
+			global.Logger.Error("解析MESSAGE-Body失败", zap.Error(err))
+			return
+		}
 	}
 	if message.XMLName.Local == "Response" {
 		switch message.CmdType {

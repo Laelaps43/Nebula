@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/ghettovoice/gosip/sip"
 	"nebula.xyz/model/request"
-
 	//"nebula.xyz/sip/sdp"
 	"net"
 	"strconv"
@@ -87,8 +86,13 @@ func Play(payload request.VideoRequestPayload) (*system.Stream, error) {
 	global.Logger.Info("点播成功......")
 
 	media := global.CONFIG.Media
+	address := media.Address
+	if media.Domain != "" {
+		address = media.Domain
+	}
+	global.Logger.Info("ZLM请求地址为", zap.String("domain", address))
 	zlmId := utils.StreamToHex(stream.StreamId)
-	stream.HTTP = fmt.Sprintf("http://%s:%s/rtp/%s/hls.m3u8", media.Address, media.Restful, zlmId)
+	stream.HTTP = fmt.Sprintf("https://%s:%s/rtp/%s/hls.m3u8", address, "44344", zlmId)
 	stream.RTMP = fmt.Sprintf("rtmp://%s:%s/rtp/%s", media.Address, media.RTMPPort, zlmId)
 	stream.RTSP = fmt.Sprintf("rtsp://%s:%s/rtp/%s", media.Address, media.RTSPPort, zlmId)
 	stream.WSFLV = fmt.Sprintf("ws://%s:%s/rtp/%s.live.flv", media.Address, media.Restful, zlmId)

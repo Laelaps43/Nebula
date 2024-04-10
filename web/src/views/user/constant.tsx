@@ -26,7 +26,7 @@ export const columns: ColumnProps[] = [
   },
   {
     title: '登录地址',
-    dataIndex: 'ip',
+    dataIndex: 'lastLoginAddress',
     width: 100,
   },
   {

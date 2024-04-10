@@ -3,6 +3,7 @@ package system
 import (
 	"go.uber.org/zap"
 	"nebula.xyz/global"
+	"nebula.xyz/helper"
 	"nebula.xyz/model"
 )
 
@@ -96,4 +97,11 @@ func (d *DeviceChannel) ChannelCount() int64 {
 		global.Logger.Error("获取通道数量失败", zap.Error(err))
 	}
 	return count
+}
+
+func (d *DeviceChannel) UpdateChannelStatusByDeviceId() {
+	err := global.DB.Model(&DeviceChannel{}).Set("status", helper.ChannelStatusOFF).Where("device_id = ?", d.DeviceId).Error
+	if err != nil {
+		global.Logger.Error("更新通道状态失败", zap.Error(err))
+	}
 }

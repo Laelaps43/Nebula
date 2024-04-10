@@ -22,4 +22,6 @@ type Media interface {
 	SetMediaServerId(serverId string)
 
 	GetMediaServerId() string
+
+	GetDomain() string
 }

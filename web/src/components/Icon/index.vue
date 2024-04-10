@@ -33,8 +33,8 @@
     },
     setup(props) {
       return {
-        iconType: computed(() => `icon-a-SimpleChainlianmenglianjichubantubiao_${props.type}`),
-        iconClass: computed(() => (props.className ? `my-icon ${props.className}` : 'my-icon')),
+        iconType: computed(() => `icon-${props.type}`),
+        iconClass: computed(() => (props.className ? `icon ${props.className}` : 'my-icon')),
         iconStyle: computed(() => {
           const style = {};
           if (props.align) style['vertical-align'] = props.align;

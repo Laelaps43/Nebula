@@ -20,7 +20,12 @@ const (
 	// 系统使用其他
 	CacheOther = 1
 
+	CacheServerUpTimeKey = "serverUpTime"
+
+	KeepTTL = -1
+
 	// Sip服务器状态
+
 	SipServerON  = 1
 	SipServerOFF = 0
 
@@ -41,8 +46,6 @@ const (
 
 	RecordMaxSecond = 0
 
-	RecordPath = "/opt/media/video"
-
 	// 设备状态
 	DeviceOnline  = "1"
 	DeviceOffline = "0"
@@ -60,6 +63,9 @@ const (
 
 	// 系统设备默认是传输协议
 	DefaultTransPort = "UDP"
+
+	// 系统默认最大删除次数
+	MaxDeleteCount = 10
 )
 
 const (

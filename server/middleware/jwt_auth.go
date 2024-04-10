@@ -11,6 +11,7 @@ import (
 	"nebula.xyz/model"
 	"nebula.xyz/service/web"
 	"nebula.xyz/utils"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -24,7 +25,9 @@ func JWTAuth() gin.HandlerFunc {
 		token := ctx.Request.Header.Get("Authorization")
 		if token == "" {
 			// token为空
-			model.ErrorWithMessage("请登录！", ctx)
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"message": "请登录！",
+			})
 			ctx.Abort()
 			return
 		}
@@ -37,11 +40,15 @@ func JWTAuth() gin.HandlerFunc {
 			// token 错误
 			if errors.Is(err, utils.TokenExpired) {
 				// Token 已过期
-				model.ErrorWithDetailed(gin.H{"reload": true}, "Token已到期", ctx)
+				ctx.JSON(http.StatusUnauthorized, gin.H{
+					"message": "Token已到期！",
+				})
 				ctx.Abort()
 				return
 			}
-			model.ErrorWithDetailed(gin.H{"reload": true}, err.Error(), ctx)
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"message": "请重新登录!",
+			})
 			ctx.Abort()
 			return
 		}
@@ -52,7 +59,7 @@ func JWTAuth() gin.HandlerFunc {
 			newToken, _ := j.CreateTokenByOlderToken(token, claims)
 			ctx.Header("new-token", newToken)
 			ctx.Header("new-expire-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
-			// 将新Token保存到Cache中，替换以来的Token
+			// 将新Token保存到Cache中，替换以前的Token
 
 			if _, err := jwtService.SetJWT(token, strconv.Itoa(int(claims.ID)), dr); err != nil {
 				global.Logger.Error("保存Token失败！", zap.Error(err))

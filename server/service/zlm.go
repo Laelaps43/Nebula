@@ -56,6 +56,7 @@ func (z *ZLMService) OnStreamChanged(change zlm.StreamChange) error {
 		// 注销
 		global.Logger.Info("收到流注销", zap.String("流Id", change.Stream))
 		stream.Status = helper.StreamClose
+		stream.Record = helper.StreamUnRecord
 		global.Logger.Debug("stream值", zap.Any("stream", stream))
 	}
 	err = global.DB.Model(&system.Stream{}).Where("stream_id = ? ", utils.HexToStream(change.Stream)).Updates(stream).Error
@@ -87,5 +88,6 @@ func (z *ZLMService) OnRecordMp4(mp4 zlm.RecordMp4) error {
 		global.Logger.Error("记录MP4失败", zap.Error(err))
 		return err
 	}
+	go utils.ClearRecordVideo()
 	return nil
 }

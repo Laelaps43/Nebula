@@ -54,7 +54,9 @@
     "video.js": "^8.6.1",
     "vue": "^3.2.23",
     "vue-request": "^1.2.3",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "xgplayer": "^3.0.0-alpha.118",
+    "xgplayer-vue": "^1.1.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^15.0.0",

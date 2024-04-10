@@ -13,7 +13,7 @@ type SERVER struct {
 
 	LoginMaxNum uint `mapstructure:"login-max-num" yaml:"login-max-num"`
 
-	LoginTimeout uint `mapstructure:"login-timeout" yaml:"login-timeout"`
+	LoginTimeout string `mapstructure:"login-timeout" yaml:"login-timeout"`
 
 	CacheType string `mapstructure:"cache-type" yaml:"cache-type"`
 }

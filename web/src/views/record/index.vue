@@ -40,7 +40,7 @@
           calendarRef.value?.initCalendar();
         });
       },
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.record_range,
     },
   ]);
 

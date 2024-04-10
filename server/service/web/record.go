@@ -180,8 +180,14 @@ func (r *RecordServer) GetRecordPlay(id string, stream string) (string, error) {
 	}
 	zlmRecord := response.ZLMRecord{}
 	_ = json.Unmarshal(ZLMResponse, &zlmRecord)
+	address := global.MediaServer.GetAddress()
+	restful := "44344"
+	domain := global.MediaServer.GetDomain()
+	if domain != "" {
+		address = domain
+	}
 	if zlmRecord.Code == 0 {
-		return fmt.Sprintf("http://%s:%s/rtp/%s/hls.m3u8", global.MediaServer.GetAddress(), global.MediaServer.GetRestful(), streamId), nil
+		return fmt.Sprintf("https://%s:%s/rtp/%s/hls.m3u8", address, restful, streamId), nil
 	}
 	return "", errors.New("播播放错误")
 }

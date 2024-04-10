@@ -14,12 +14,10 @@ func (d *DeviceRouter) InitDeviceRouter(group *gin.RouterGroup) {
 	deviceApi := web.WebApiAll.DeviceApi
 	{
 		// 获取所有Device信息
-		deviceRouter.POST("/list", deviceApi.GetDeviceInfoPagination)
-		deviceRouter.GET(":deviceId", deviceApi.GetDeviceInfoById)
-		// 更新设备
-		deviceRouter.POST("/update", deviceApi.UpdateDeviceInfo)
-		deviceRouter.GET("/generate", deviceApi.GenerateDevice)
-		deviceRouter.POST("/create", deviceApi.CreateDevice)
-		deviceRouter.GET("/delete/:deviceId", deviceApi.DeleteDevice)
+		deviceRouter.POST("list", deviceApi.GetDeviceInfoPagination)
+		deviceRouter.POST("update", deviceApi.UpdateDeviceInfo)
+		deviceRouter.GET("create/generate", deviceApi.GenerateDevice)
+		deviceRouter.POST("create/create", deviceApi.CreateDevice)
+		deviceRouter.GET("delete/:deviceId", deviceApi.DeleteDevice)
 	}
 }

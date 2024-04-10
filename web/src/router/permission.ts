@@ -12,6 +12,7 @@ const whiteList = ['/login']; // no redirect whitelist
 
 router.beforeEach(async (to: any, _, next) => {
   const hasToken = getToken();
+  // console.log(hasToken);
   if (hasToken) {
     // 已登录
     if (to.path === '/login') {
@@ -24,9 +25,10 @@ router.beforeEach(async (to: any, _, next) => {
       } else {
         // 没有获取，请求数据
         await permissioStore.fetchAuths();
+        // console.log(permissioStore.modules);
         // 过滤权限路由
         const routes = await permissioStore.buildRoutesAction();
-        console.log(routes);
+        // console.log(routes);
         // 404 路由一定要放在 权限路由后面
         routes.forEach((route) => {
           router.addRoute(route);

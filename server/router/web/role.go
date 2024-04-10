@@ -8,13 +8,15 @@ import (
 type RoleRouter struct{}
 
 func (a *RoleRouter) InitRoleRouter(Router *gin.RouterGroup) (R gin.IRouter) {
-	roleRouter := Router.Group("/role")
+	roleRouter := Router.Group("role")
 	roleApi := web.WebApiAll.RoleApi
 	{
-		roleRouter.POST("/create", roleApi.CreateRole)
-		roleRouter.POST("/list", roleApi.GetRolePagination)
-		roleRouter.POST("/update", roleApi.UpdateRole)
-		roleRouter.GET("/delete/:roleId", roleApi.DeleteRole)
+		roleRouter.POST("create", roleApi.CreateRole)
+		roleRouter.POST("list", roleApi.GetRolePagination)
+		roleRouter.POST("update", roleApi.UpdateRole)
+		roleRouter.GET("delete/:roleId", roleApi.DeleteRole)
+		roleRouter.GET("permission/:roleId", roleApi.GetAllPermission)
+		roleRouter.POST("permission/update", roleApi.UpdatePermission)
 	}
 	return roleRouter
 }

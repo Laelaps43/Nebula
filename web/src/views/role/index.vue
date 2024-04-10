@@ -34,7 +34,7 @@
           <a-input v-model:value="formCreateRole.desc" placeholder="请输入角色描述" />
         </a-form-item>
         <a-form-item label="角色:" name="parentRole">
-          <a-select disabled v-model:value="formCreateRole.parentId" :options="options"></a-select>
+          <a-select disabled v-model:value="formCreateRole.parentId" :options="options" />
         </a-form-item>
       </a-form>
     </Modal>
@@ -61,9 +61,51 @@
           <a-input v-model:value="formUpdateRole.desc" placeholder="请输入角色描述" />
         </a-form-item>
         <a-form-item label="角色:" name="parentRole">
-          <a-select disabled v-model:value="formUpdateRole.parentId" :options="options"></a-select>
+          <a-select disabled v-model:value="formUpdateRole.parentId" :options="options" />
         </a-form-item>
       </a-form>
+    </Modal>
+
+    <Modal
+      v-bind="modalPermission"
+      @cancel="handelPermissionCancel()"
+      @ok="handlePermissionSubmit()"
+    >
+      <div style="height: 30vh">
+        <a-tabs v-model:activeKey="activeKey" centered>
+          <a-tab-pane key="1" tab="菜单权限">
+            <a-checkbox-group v-model:value="formPermission.menu" style="width: 100%">
+              <div
+                style="width: 100%; display: flex; justify-content: center; flex-direction: column"
+              >
+                <a-row v-for="(item, index) in menuOptions" :key="index">
+                  <a-col v-for="(col, y) in item" :span="6" :key="y">
+                    <a-checkbox :disabled="!col.disable" :value="col.value"
+                      >{{ col.label }}
+                    </a-checkbox>
+                  </a-col>
+                </a-row>
+              </div>
+            </a-checkbox-group>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="按钮权限" force-render>
+            <a-checkbox-group v-model:value="formPermission.button" style="width: 100%">
+              <div
+                style="width: 100%; display: flex; justify-content: center; flex-direction: column"
+              >
+                <a-row v-for="(item, index) in buttonOptions" :key="index">
+                  <a-col v-for="(col, y) in item" :span="6" :key="y">
+                    <a-checkbox :disabled="!col.disable" :value="col.value"
+                      >{{ col.label }}
+                    </a-checkbox>
+                  </a-col>
+                </a-row>
+              </div>
+            </a-checkbox-group>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="数据权限" force-render></a-tab-pane>
+        </a-tabs>
+      </div>
     </Modal>
   </div>
 </template>
@@ -77,7 +119,7 @@
   import { Ref } from 'vue/dist/vue';
   import { Rule } from 'ant-design-vue/es/form';
   import type { SelectProps } from 'ant-design-vue';
-  import { RoleCreate, RoleUpdate } from '/@/api/role/model';
+  import { PermissionUpdate, RoleCreate, RoleUpdate } from "/@/api/role/model";
   import { ref } from 'vue';
 
   const { createMessage } = useMessage();
@@ -210,11 +252,15 @@
   const tableActions = reactive([
     {
       label: '编辑权限',
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.role_create,
+      onClick: (row) => {
+        fetchPermission(row.id);
+        formPermission.roleId = row.id;
+      },
     },
     {
       label: '新增子角色',
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.role_create,
       onClick: async (row) => {
         modalCreateRole.visible = true;
         formCreateRole.value.parentId = row.id;
@@ -228,7 +274,7 @@
     },
     {
       label: '编辑',
-      auth: AuthEnum.device_update,
+      auth: AuthEnum.role_update,
       onClick: async (row) => {
         modalUpdateRole.visible = true;
         formUpdateRole.value.id = row.id;
@@ -245,17 +291,18 @@
     },
     {
       label: '删除',
+      enable: true,
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {
           const result = await fetchApi.DeleteRole(row.id);
           if (result) {
-            refresh()
+            refresh();
             createMessage.success('删除成功');
           }
         },
       },
-      auth: AuthEnum.device_delete,
+      auth: AuthEnum.role_delete,
     },
   ]);
 
@@ -285,6 +332,77 @@
       key: 'action',
     },
   ];
+
+  const modalPermission = reactive({
+    loading: false,
+    visible: false,
+    title: '设置权限',
+    okText: '确认',
+  });
+
+  const handelPermissionCancel = () => {
+    modalPermission.visible = false;
+    formPermission.menu = [];
+    formPermission.button = [];
+    activeKey.value = '1';
+  };
+
+  const activeKey = ref('1');
+  const formPermission = reactive<PermissionUpdate>({
+    menu: [],
+    button: [],
+    roleId: '',
+  });
+  const menuOptions = ref<any[][]>([]);
+  const buttonOptions = ref<any[][]>([]);
+  const dataOptions = ref<any[][]>([]);
+
+  const convertToTwoDimensionalArray = (inputArray: any[]) => {
+    const result: any[][] = [];
+
+    for (let i = 0; i < inputArray.length; i += 4) {
+      result.push(inputArray.slice(i, i + 4));
+    }
+    return result;
+  };
+
+  const fetchPermission = async (id: string) => {
+    modalPermission.visible = true;
+    modalPermission.loading = true;
+    let res = await fetchApi.getPermission(id);
+    modalPermission.loading = false;
+    if (res) {
+      menuOptions.value = convertToTwoDimensionalArray(res.menus);
+      buttonOptions.value = convertToTwoDimensionalArray(res.buttons);
+      console.log(res.menus);
+      res.menus.forEach((item) => {
+        if (item?.hold) {
+          formPermission.menu.push(item.value);
+        }
+      });
+      res.buttons.forEach((item) => {
+        if (item?.hold) {
+          formPermission.button.push(item?.value);
+        }
+      });
+      console.log(formPermission.menu);
+    } else {
+      createMessage.error('获取权限错误');
+    }
+  };
+  const handlePermissionSubmit = async () => {
+    modalPermission.loading = true;
+    let res = await fetchApi.updatePermission(formPermission);
+    modalPermission.loading = false;
+    if (res) {
+      modalPermission.visible = false;
+      createMessage.success('设置权限成功');
+      handelPermissionCancel();
+      refresh();
+    } else {
+      createMessage.error('设置权限失败失败');
+    }
+  };
 </script>
 
 <style scoped lang="less"></style>

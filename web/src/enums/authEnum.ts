@@ -21,9 +21,32 @@ export enum AuthEnum {
    * 通道列表
    */
   channel_create = 'channel:create',
+  video_play = 'video:play',
+  video_record = `video:record`,
+  video_stop_record = 'video:stop:record',
+  channel_update = 'channel:update',
+  channel_delete = 'channel:delete',
 
   /**
    * 角色管理
    */
   role_create = 'role:create',
+  role_update = 'role:update',
+  role_delete = 'role:delete',
+  role_allPermission = 'role:allPermission',
+
+  /**
+   * 远端录像
+   */
+  record_range = 'record:range',
+  record_details = 'record:details',
+  record_play = 'record:play',
+
+  /**
+   * 用户管理
+   */
+  user_create = 'user:create',
+  user_enable = 'user:enable',
+  user_update = 'user:update',
+  user_delete = 'user:delete',
 }

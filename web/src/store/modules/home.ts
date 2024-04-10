@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
 import fetchApi from '/@/api/home';
-import { OverViewResult } from '/@/api/home/model';
+import { OverViewResult, ServerInfoResult } from '/@/api/home/model';
 
 interface HomeState {
   overView: Nullable<OverViewResult>;
   systemInfo: Nullable<any>;
+  serverInfo: Nullable<ServerInfoResult>;
 }
 
 export const useHomeStore = defineStore({
@@ -13,6 +14,7 @@ export const useHomeStore = defineStore({
   state: (): HomeState => ({
     overView: null,
     systemInfo: null,
+    serverInfo: null,
   }),
   getters: {
     getOverView(): Nullable<OverViewResult> {
@@ -20,6 +22,9 @@ export const useHomeStore = defineStore({
     },
     getSystemInfo(): any {
       return this.systemInfo || null;
+    },
+    getServerInfo(): Nullable<ServerInfoResult> {
+      return this.serverInfo;
     },
   },
   actions: {
@@ -29,9 +34,13 @@ export const useHomeStore = defineStore({
     setSystemInfo(systemInfo: any) {
       this.systemInfo = systemInfo;
     },
+    setServerInfo(serverInfo: ServerInfoResult) {
+      this.serverInfo = serverInfo;
+    },
     resetState() {
       this.overView = null;
       this.systemInfo = null;
+      this.serverInfo = null;
     },
     /**
      * @description: login
@@ -50,6 +59,15 @@ export const useHomeStore = defineStore({
       if (res) {
         // save token
         this.setSystemInfo(res);
+      }
+      return res;
+    },
+    async fetchServerInfo() {
+      // 最近一个小时的时间
+      const res = await fetchApi.serverInfo();
+      if (res) {
+        // save token
+        this.setServerInfo(res);
       }
       return res;
     },

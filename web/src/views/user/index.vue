@@ -108,7 +108,7 @@
   const tableFilterButton = reactive({
     type: 'primary',
     label: '新增用户',
-    auth: AuthEnum.device_create,
+    auth: AuthEnum.user_create,
     onClick: () => {
       modalCreateUser.visible = true;
     },
@@ -208,11 +208,11 @@
           refresh();
         }
       },
-      auth: AuthEnum.channel_show,
+      auth: AuthEnum.user_enable,
     },
     {
       label: '编辑',
-      auth: AuthEnum.device_update,
+      auth: AuthEnum.user_update,
       onClick: async (row) => {
         modalUpdateUser.visible = true;
         formUpdateUser.value.id = row.id;
@@ -224,6 +224,7 @@
     },
     {
       label: '删除',
+      enable: true,
       popConfirm: {
         title: '确认删除吗？',
         onConfirm: async (row) => {
@@ -234,7 +235,7 @@
           }
         },
       },
-      auth: AuthEnum.device_delete,
+      auth: AuthEnum.user_delete,
     },
   ]);
 

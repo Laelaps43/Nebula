@@ -62,7 +62,7 @@ func (v *VideoService) RecordVideo(device system.Device, channel system.DeviceCh
 		App:            stream.App,
 		Stream:         utils.StreamToHex(stream.StreamId),
 		MaxSecond:      helper.RecordMaxSecond,
-		CustomizedPath: helper.RecordPath,
+		CustomizedPath: global.CONFIG.Media.RecordPath,
 	}
 	body, err := json.Marshal(start)
 	if err != nil {

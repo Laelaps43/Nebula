@@ -80,13 +80,14 @@ func InitSipServer() {
 	for _, server := range mediaList {
 		global.MediaServer = &server
 		_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
-		if err != err {
+		if err != nil {
 			global.Logger.Error("媒体服务服务器离线", zap.String("mediaServerId", server.MediaServerId))
 		} else {
 			global.Logger.Info("媒体服务服务器在线", zap.String("mediaServerId", server.MediaServerId))
 			if tmpService.MediaServerId == "" || tmpService.Sort > server.Sort {
 				tmpService = server
 			}
+			break
 		}
 		global.MediaServer = nil
 	}
@@ -100,6 +101,7 @@ func InitSipServer() {
 		server.SetRTMPPort(global.CONFIG.Media.RTMPPort)
 		server.SetSecret(global.CONFIG.Media.Secret)
 		server.SetMediaServerId(global.CONFIG.Media.MediaServerId)
+		server.SetDomain(global.CONFIG.Media.Domain)
 		global.MediaServer = &server
 		_, err := utils.ZLMHttpRequest(helper.ZlmGetApiList, nil)
 		if err != nil {

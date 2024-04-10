@@ -12,7 +12,6 @@ type webApi struct {
 	RoleApi
 	VideoApi
 	RecordApi
-	SystemApi
 	DeviceApi
 	ChannelApi
 }

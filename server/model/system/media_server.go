@@ -24,6 +24,7 @@ type MediaServer struct {
 	UdpServer     int        `gorm:"comment:Udp服务端"`
 	UdpSession    int        `gorm:"comment:Udp会话"`
 	MediaSource   int        `gorm:"comment:媒体源个数"`
+	Domain        string     `gorm:"comment:domain地址"`
 }
 
 func (m *MediaServer) TableName() string {
@@ -84,4 +85,12 @@ func (m *MediaServer) SetMediaServerId(serverId string) {
 
 func (m *MediaServer) GetMediaServerId() string {
 	return m.MediaServerId
+}
+
+func (m *MediaServer) GetDomain() string {
+	return m.Domain
+}
+
+func (m *MediaServer) SetDomain(domain string) {
+	m.Domain = domain
 }

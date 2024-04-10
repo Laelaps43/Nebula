@@ -16,7 +16,7 @@
           :options="selectOptions"
         />
       </div>
-      <div style="width: 100%; display: flex; justify-content: center">
+      <div id="mse" style="width: 100%; display: flex; justify-content: center">
         <video-player
           :ref="(el) => (playerRef = el)"
           :src="options.src"
@@ -70,9 +70,7 @@
         player.value = p.player;
       };
       const setValue = (v) => {
-        console.log(v);
         value.value = v;
-        console.log(value.value);
       };
       const changeSelect = (v, _) => {
         value.value = v;

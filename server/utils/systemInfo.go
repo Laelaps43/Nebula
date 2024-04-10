@@ -6,6 +6,7 @@ import (
 	"github.com/shirou/gopsutil/v3/disk"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/net"
+	"go.uber.org/zap"
 	"nebula.xyz/global"
 	"time"
 )
@@ -24,29 +25,53 @@ func GetSystemInfo() {
 
 		// 内存百分比
 		//fmt.Println("-----------MEM-----------------")
-		memory, _ := mem.SwapMemory()
+		memory, err := mem.VirtualMemory()
+		//fmt.Println(memory)
+		if err != nil {
+			global.Logger.Error("获取内存信息错误", zap.Error(err))
+		}
+		//global.Logger.Info("内存信息", zap.Float64("内存使用量:", memory.UsedPercent))
 		global.Info.MemList = append(global.Info.MemList[1:60], fmt.Sprintf("%.2f", memory.UsedPercent))
 		//fmt.Println(global.MemList)
 
 		// 硬盘占比
 		//fmt.Println("-----------Disk-----------------")
-		//usage, _ := disk.Usage("/")
-		partitions, _ := disk.Partitions(true)
-		for _, partition := range partitions {
-			if partition.Device == "/dev/disk3s1" {
-				usage, _ := disk.Usage(partition.Mountpoint)
-				global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
-					usage.UsedPercent))
+		stat, err := disk.Usage(global.CONFIG.Media.RecordPath)
+		if err == nil {
+			//fmt.Println("----------")
+			//fmt.Println(stat.Path)
+			//fmt.Println(stat.Free)
+			//fmt.Println(stat.UsedPercent)
+			//fmt.Println(stat.Total)
+			global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
+				stat.UsedPercent))
+			if stat.UsedPercent > 95 {
+				// 大于百分之95，需要清理
+				go ClearRecordVideo()
 			}
+		} else {
+			global.Logger.Error("获取硬盘占比错误:", zap.Error(err))
 		}
+		//partitions, _ := disk.Partitions(true)
+		//for _, partition := range partitions {
+		//	if partition.Device == "/dev/disk3s1" {
+		//		usage, _ := disk.Usage(partition.Mountpoint)
+		//		global.Info.DiskList = append(global.Info.DiskList[1:60], fmt.Sprintf("%.2f",
+		//			usage.UsedPercent))
+		//	}
+		//}
 		//global.DiskList = append(global.DiskList[1:60], fmt.Sprintf("%.2f", usage.UsedPercent))
 		//fmt.Println(global.DiskList)
 
 		//fmt.Println("-----------Net-----------------")
-		netStatus, _ := net.IOCounters(true)
+		netStatus, err := net.IOCounters(true)
+		//fmt.Println(netStatus)
+		if err != nil {
+			global.Logger.Error("获取网络信息错误", zap.Error(err))
+		}
 		var oldStats net.IOCountersStat
 		for _, stat := range netStatus {
-			if stat.Name == "en0" {
+			if stat.Name == "ens192" {
 				oldStats = stat
 			}
 		}
@@ -55,7 +80,7 @@ func GetSystemInfo() {
 		netStatus, _ = net.IOCounters(true)
 		var newStats net.IOCountersStat
 		for _, stat := range netStatus {
-			if stat.Name == "en0" {
+			if stat.Name == "ens192" {
 				newStats = stat
 			}
 		}

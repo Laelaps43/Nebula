@@ -53,3 +53,8 @@ func (r *RedisClient) Increment(key string) (int64, error) {
 	intCmd := redisCon.Connect.Incr(ctx, REDIS_PREFIX+key)
 	return intCmd.Val(), intCmd.Err()
 }
+
+func (r *RedisClient) Expire(key string, expire time.Duration) (bool, error) {
+	cmd := redisCon.Connect.Expire(ctx, REDIS_PREFIX+key, expire)
+	return cmd.Val(), cmd.Err()
+}

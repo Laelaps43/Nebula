@@ -2,7 +2,7 @@
   <a-layout-header class="header">
     <div class="logo-wrap">
       <router-link :to="{ path: '/' }">
-        <img :src="logo" class="logo" />
+        <img  :src="logo" class="logo" />
         <h1 class="title"> {{ APP_TITLE }} </h1>
       </router-link>
     </div>
@@ -13,7 +13,7 @@
 </template>
 <script setup lang="ts">
   import RightContent from './RightContent.vue';
-  import logo from '/@/assets/images/logo.png';
+  import logo from '/@/assets/images/logo.webp';
   import { APP_TITLE } from '../../../../config/constant';
 </script>
 <style lang="less" scoped>
@@ -41,8 +41,8 @@
         color: #000000;
       }
       .logo {
-        width: 48px;
-        height: 48px;
+        width: 52px;
+        height: 52px;
       }
     }
   }

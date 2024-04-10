@@ -55,7 +55,7 @@ export const usePermissioStore = defineStore({
     },
     resetState() {
       this.isGetUserInfo = false;
-      this.isAdmin = 0;
+      this.isAdmin = 1;
       this.auths = [];
       this.modules = [];
       this.role = 0;
@@ -69,9 +69,6 @@ export const usePermissioStore = defineStore({
       const res = await fetchApi.permission();
       if (res) {
         this.setAuth(res.auths, res.modules);
-        // this.setIsAdmin(res.is_admin || 0);
-        // TODO 系统没有实现是否管理员登入
-        this.setIsAdmin(1);
       }
       return res;
     },
@@ -83,19 +80,15 @@ export const usePermissioStore = defineStore({
     async buildRoutesAction(): Promise<RouteRecordRaw[]> {
       // 404 路由一定要放在 权限路由后面
       let routes: RouteRecordRaw[] = [...constantRoutes, ...accessRoutes, ...publicRoutes];
-      console.log(routes);
 
-      if (this.getIsAdmin !== 1) {
-        // 普通用户
-        // 1. 方案一：过滤每个路由模块涉及的接口权限，判断是否展示该路由
-        // 2. 方案二：直接检索接口权限列表是否包含该路由模块，不做细分，axios同一拦截
-        routes = [
-          ...constantRoutes,
-          ...filterAsyncRoutes(accessRoutes, this.modules),
-          ...publicRoutes,
-        ];
-      }
-
+      // 普通用户
+      // 1. 方案一：过滤每个路由模块涉及的接口权限，判断是否展示该路由
+      // 2. 方案二：直接检索接口权限列表是否包含该路由模块，不做细分，axios同一拦截
+      routes = [
+        ...constantRoutes,
+        ...filterAsyncRoutes(accessRoutes, this.modules),
+        ...publicRoutes,
+      ];
       return routes;
     },
 

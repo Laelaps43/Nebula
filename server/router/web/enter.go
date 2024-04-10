@@ -6,7 +6,6 @@ type webRouter struct {
 	RoleRouter
 	HomeRouter
 	DeviceRouter
-	SystemRouter
 	RecordRouter
 	ChannelRouter
 }
